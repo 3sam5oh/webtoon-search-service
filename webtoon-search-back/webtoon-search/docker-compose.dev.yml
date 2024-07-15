@@ -1,0 +1,49 @@
+version: '3'
+services:
+  opensearch-node1:
+    image: opensearchproject/opensearch:2.15.0  # 특정 버전 사용
+    container_name: opensearch-node1
+    environment:
+      - cluster.name=opensearch-cluster # 클러스터 이름 지정
+      - node.name=opensearch-node1 # 이 컨테이너에서 실행될 노드 이름 지정
+      - discovery.type=single-node # 단일 노드 설정
+      - bootstrap.memory_lock=true # JVM 힙 메모리 스와핑 비활성화
+      - "OPENSEARCH_JAVA_OPTS=-Xms512m -Xmx512m" # 최소 및 최대 JVM 힙 크기 설정
+      - "DISABLE_INSTALL_DEMO_CONFIG=true" # 데모 구성 설치 방지
+      - "DISABLE_SECURITY_PLUGIN=true" # 보안 플러그인 비활성화
+    ulimits:
+      memlock:
+        soft: -1 # memlock을 무제한으로 설정 (소프트 또는 하드 제한 없음)
+        hard: -1
+      nofile:
+        soft: 65536 # opensearch 사용자의 최대 오픈 파일 수 - 최소 65536으로 설정
+        hard: 65536
+    volumes:
+      - opensearch-data1:/usr/share/opensearch/data # opensearch-data1이라는 볼륨 생성 및 컨테이너에 마운트
+    ports:
+      - 9200:9200 # REST API
+      - 9600:9600 # Performance Analyzer
+    expose:
+      - "9200"
+      - "9600"
+    networks:
+      - opensearch-net # 모든 컨테이너가 동일한 Docker 브리지 네트워크에 연결
+
+  opensearch-dashboards:
+    image: opensearchproject/opensearch-dashboards:2.15.0  # 특정 버전 사용
+    container_name: opensearch-dashboards
+    ports:
+      - 5601:5601 # 호스트 포트 5601을 컨테이너 포트 5601에 매핑
+    expose:
+      - "5601" # OpenSearch Dashboards 웹 접근을 위해 포트 5601 노출
+    environment:
+      OPENSEARCH_HOSTS: '["http://opensearch-node1:9200"]'
+      DISABLE_SECURITY_DASHBOARDS_PLUGIN: "true" # OpenSearch Dashboards의 보안 대시보드 플러그인 비활성화
+    networks:
+      - opensearch-net
+
+volumes:
+  opensearch-data1:
+
+networks:
+  opensearch-net:
