@@ -10,26 +10,24 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.time.Duration;
-
 @Configuration
 public class OpenSearchConfig {
 
-    @Value("${opensearch.uris}")
+    @Value("${spring.opensearch.uris}")
     private String opensearchUri;
 
-    @Value("${opensearch.connection-timeout}")
-    private String connectionTimeout;
+    @Value("${spring.opensearch.connection-timeout}")
+    private int connectionTimeout;
 
-    @Value("${opensearch.socket-timeout}")
-    private String socketTimeout;
+    @Value("${spring.opensearch.socket-timeout}")
+    private int socketTimeout;
 
     @Bean
     public OpenSearchClient openSearchClient() {
         RestClient restClient = RestClient.builder(HttpHost.create(opensearchUri))
                 .setRequestConfigCallback(requestConfigBuilder -> requestConfigBuilder
-                        .setConnectTimeout(Duration.parse(connectionTimeout).toMillisPart())
-                        .setSocketTimeout(Duration.parse(socketTimeout).toMillisPart())
+                        .setConnectTimeout(connectionTimeout)
+                        .setSocketTimeout(socketTimeout)
                 )
                 .build();
 
