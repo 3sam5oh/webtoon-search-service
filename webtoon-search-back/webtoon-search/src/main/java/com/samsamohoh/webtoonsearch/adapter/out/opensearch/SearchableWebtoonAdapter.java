@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
-public class OpenSearchWebtoonAdapter implements LoadWebtoonPort {
+public class SearchableWebtoonAdapter implements LoadWebtoonPort {
     private final OpenSearchWebtoonRepository openSearchWebtoonRepository;
 
     @Override

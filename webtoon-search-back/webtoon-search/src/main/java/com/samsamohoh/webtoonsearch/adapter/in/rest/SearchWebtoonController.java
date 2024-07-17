@@ -1,26 +1,26 @@
 package com.samsamohoh.webtoonsearch.adapter.in.rest;
 
-import com.samsamohoh.webtoonsearch.adapter.in.rest.vo.SearchWebtoonResponseVO;
-import com.samsamohoh.webtoonsearch.application.dto.SearchWebtoonResultDTO;
+import com.samsamohoh.webtoonsearch.adapter.in.rest.mapper.WebtoonMapper;
+import com.samsamohoh.webtoonsearch.adapter.in.rest.vo.SearchWebtoonsResponseVO;
 import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonUseCase;
+import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
-@Controller
+@RestController
+@RequestMapping("/webtoons")
 @RequiredArgsConstructor
 public class SearchWebtoonController {
     private final SearchWebtoonUseCase searchWebtoonUseCase;
+    private final WebtoonMapper webtoonMapper;
 
-    @GetMapping("/webtoons")
-    public List<SearchWebtoonResponseVO> searchWebtoons(@RequestParam String title) {
-        List<SearchWebtoonResultDTO> webtoons = searchWebtoonUseCase.searchWebtoons(title);
-        return webtoons.stream()
-                .map(SearchWebtoonResponseVO::fromDTO)
-                .collect(Collectors.toList());
+    @GetMapping("/searchable")
+    public ResponseEntity<ApiResponse<SearchWebtoonsResponseVO>> searchWebtoons(@RequestParam(required = false) String title) {
+        SearchWebtoonsResponseVO responseVO = webtoonMapper.toResponseVO(searchWebtoonUseCase.searchWebtoons(title));
+        return ResponseEntity.ok(new ApiResponse<>(responseVO));
     }
 }
