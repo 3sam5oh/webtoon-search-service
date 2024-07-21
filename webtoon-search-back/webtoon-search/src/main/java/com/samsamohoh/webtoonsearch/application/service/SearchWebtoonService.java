@@ -5,6 +5,8 @@ import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.application.port.in.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonQuery;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,25 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SearchWebtoonService implements SearchWebtoonUseCase {
     private final LoadWebtoonPort loadWebtoonPort;
+    private final MeterRegistry meterRegistry;
 
     @Override
     public WebtoonResult searchWebtoons(SearchWebtoonCommand command) {
+
+        if(isNull(command, "search.condition.null.count","title is null"))
+            throw new IllegalArgumentException("검색 조건이 존재하지 않음.");
+
         return loadWebtoonPort.loadWebtoons(new LoadWebtoonQuery(command.getQuery()));
+    }
+
+    private boolean isNull(SearchWebtoonCommand command, String metricName, String description){
+
+        if (command == null || command.getQuery() == null || command.getQuery().isEmpty()) {
+            Counter counter = Counter.builder(metricName)
+                    .description(description)
+                    .register(meterRegistry);
+        }
+
+        return false;
     }
 }

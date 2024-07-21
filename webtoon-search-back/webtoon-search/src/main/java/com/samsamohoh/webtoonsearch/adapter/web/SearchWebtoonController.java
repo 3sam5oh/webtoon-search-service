@@ -7,6 +7,7 @@ import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,15 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class SearchWebtoonController {
     private final SearchWebtoonUseCase searchWebtoonUseCase;
     private final MeterRegistry meterRegistry;
-    private final Counter counter;
 
     @Autowired
     public SearchWebtoonController(SearchWebtoonUseCase searchWebtoonUseCase, MeterRegistry meterRegistry) {
         this.searchWebtoonUseCase = searchWebtoonUseCase;
         this.meterRegistry = meterRegistry;
-        this.counter = Counter.builder("search.title.request.error.count")
-                .description("Number of errors for search requests")
-                .register(meterRegistry);;
     }
 
     @Timed(value = "find.search.list.duration", extraTags = {"/webtoons/search", "GET"},
@@ -39,7 +36,8 @@ public class SearchWebtoonController {
     public ApiResponse<SearchWebtoonResponse> searchWebtoon(@RequestParam String query) {
 
         if (query.equals("1")){
-            counter.increment();
+            counter(meterRegistry, "search.title.request.error.count", "Invalid input query")
+                    .increment();
             throw new IllegalArgumentException("실패함");
         }
 
@@ -50,5 +48,12 @@ public class SearchWebtoonController {
     @GetMapping("health")
     public String healthCheck() {
         return "fine working!";
+    }
+
+    private Counter counter(MeterRegistry meterRegistry, String name, String describe){
+
+        return Counter.builder(name)
+                .description(describe)
+                .register(meterRegistry);
     }
 }
