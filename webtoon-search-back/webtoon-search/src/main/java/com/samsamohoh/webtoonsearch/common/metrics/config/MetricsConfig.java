@@ -1,5 +1,6 @@
-package com.samsamohoh.webtoonsearch.common.config;
+package com.samsamohoh.webtoonsearch.common.metrics.config;
 
+import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.aop.CountedAspect;
 import io.micrometer.core.aop.TimedAspect;
 import io.micrometer.core.instrument.MeterRegistry;
@@ -16,7 +17,8 @@ import org.springframework.context.annotation.Configuration;
    2. Gauge   : 감소할 수 있는 수 기록. 주로 현재의 수치를 기록 하는데 사용.(ex: CPU, DISK 사용률)
    3. Timer   : 메소드 / 클래스 등의 호출 시간을 메트릭화 시킬 때 사용할 수 있다. (ex: 웹툰 조회 메소드의 응답 시간)
 
-   Gauge는 actuator 의 기본 메트릭으로 처리할 수 있을 것 같아서 일단의 @Counted 와 @Timed 만 사용해서 메트릭을 정의해 봄
+   Gauge는 별도로 관리할 수치가 없고 actuator 의 기본 메트릭으로 처리할 수 있을 것 같아서
+   @Counted 와 @Timed 만으로 메트릭 정의
  */
 @Configuration
 public class MetricsConfig{
@@ -29,5 +31,10 @@ public class MetricsConfig{
     @Bean
     public TimedAspect timedAspect(MeterRegistry meterRegistry) {
         return new TimedAspect(meterRegistry);
+    }
+
+    @Bean
+    public CustomMetrics customMetrics(MeterRegistry meterRegistry) {
+        return new CustomMetrics(meterRegistry);
     }
 }

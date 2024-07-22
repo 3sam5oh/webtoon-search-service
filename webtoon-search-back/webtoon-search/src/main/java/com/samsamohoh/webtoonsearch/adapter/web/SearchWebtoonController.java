@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/webtoons")
-@Counted("search.controller.request.count")
+@Counted(value = "search.request.count", extraTags = {"class", "search-webtoon-controller"})
 public class SearchWebtoonController {
     private final SearchWebtoonUseCase searchWebtoonUseCase;
     private final MeterRegistry meterRegistry;
@@ -29,17 +29,11 @@ public class SearchWebtoonController {
         this.meterRegistry = meterRegistry;
     }
 
-    @Timed(value = "find.search.list.duration", extraTags = {"/webtoons/search", "GET"},
-            description = "find webtoon lists by title")
-    @Counted("search.title.request.count")
+    @Timed(value = "search.request.duration"
+            , extraTags = {"class", "search-webtoon-controller", "endpoint", "/webtoons/search"}
+            , description = "duration until search webtoon list")
     @GetMapping("/search")
     public ApiResponse<SearchWebtoonResponse> searchWebtoon(@RequestParam String query) {
-
-        if (query.equals("1")){
-            counter(meterRegistry, "search.title.request.error.count", "Invalid input query")
-                    .increment();
-            throw new IllegalArgumentException("실패함");
-        }
 
         WebtoonResult result = searchWebtoonUseCase.searchWebtoons(new SearchWebtoonCommand(query));
         return new ApiResponse<>(SearchWebtoonResponse.fromWebtoonResult(result));
@@ -50,10 +44,4 @@ public class SearchWebtoonController {
         return "fine working!";
     }
 
-    private Counter counter(MeterRegistry meterRegistry, String name, String describe){
-
-        return Counter.builder(name)
-                .description(describe)
-                .register(meterRegistry);
-    }
 }
