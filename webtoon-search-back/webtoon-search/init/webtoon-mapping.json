@@ -1,0 +1,58 @@
+{
+  "settings": {
+    "index": {
+      "number_of_shards": 5,
+      "number_of_replicas": 1
+    },
+    "analysis": {
+      "tokenizer": {
+        "nori": {
+          "type": "nori_tokenizer"
+        }
+      },
+      "filter": {
+        "autocomplete_filter": {
+          "type": "edge_ngram",
+          "min_gram": 1,
+          "max_gram": 20
+        }
+      },
+      "analyzer": {
+        "my_analyzer": {
+          "type": "custom",
+          "tokenizer": "nori",
+          "filter": [
+            "lowercase",
+            "autocomplete_filter"
+          ]
+        }
+      }
+    }
+  },
+  "mappings": {
+    "properties": {
+      "id": { "type": "keyword" },
+      "title": {
+        "type": "text",
+        "analyzer": "my_analyzer",
+        "search_analyzer": "my_analyzer",
+        "fields": {
+          "keyword": {
+            "type": "keyword",
+            "ignore_above": 256
+          }
+        }
+      },
+      "provider": { "type": "keyword" },
+      "updateDays": { "type": "keyword" },
+      "url": { "type": "keyword" },
+      "thumbnail": { "type": "keyword" },
+      "isEnd": { "type": "boolean" },
+      "isFree": { "type": "boolean" },
+      "isUpdated": { "type": "boolean" },
+      "ageGrade": { "type": "integer" },
+      "freeWaitHour": { "type": "integer" },
+      "authors": { "type": "keyword" }
+    }
+  }
+}
