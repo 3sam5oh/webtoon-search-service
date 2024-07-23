@@ -5,8 +5,13 @@ import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.application.port.in.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonQuery;
+import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
+import io.micrometer.core.instrument.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.Arrays;
+import java.util.List;
 
 /* 필기.
     메트릭: 어플리케이션 관점에서의 수집 메트릭이 필요. ex) 조회 실패, 요청 건수, 로그로 추천 -> 자주 사용하는 단어?
@@ -22,9 +27,33 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SearchWebtoonService implements SearchWebtoonUseCase {
     private final LoadWebtoonPort loadWebtoonPort;
+    private final CustomMetrics customMetrics;
 
     @Override
     public WebtoonResult searchWebtoons(SearchWebtoonCommand command) {
+
+        if(isNull(command, "search.condition.null.count"
+                ,"title is null"
+                , Arrays.asList(Tag.of("class","search-webtoon-service"),
+                                Tag.of("method","search-webtoons"),
+                                Tag.of("endpoint","/webtoons/search")))
+        )
+            throw new IllegalArgumentException("검색 조건이 존재 하지 않음.");
+
         return loadWebtoonPort.loadWebtoons(new LoadWebtoonQuery(command.getQuery()));
+    }
+
+    // 검색어 전달 객체가 null이나 빈 값을 가질 경우 메트릭 에러 카운트 메트릭 등록
+    private boolean isNull(SearchWebtoonCommand data
+            , String metricName
+            , String description
+            , List<Tag> tags){
+
+        if (data == null || data.getQuery() == null || data.getQuery().isEmpty()) {
+            customMetrics.getCounter(metricName, description, tags).increment();
+
+            return true;
+        }
+        return false;
     }
 }
