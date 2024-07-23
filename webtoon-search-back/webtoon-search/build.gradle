@@ -38,6 +38,12 @@ dependencies {
     implementation 'org.opensearch.client:spring-data-opensearch-starter:1.5.0'
     // https://mvnrepository.com/artifact/org.opensearch.client/opensearch-java
     implementation 'org.opensearch.client:opensearch-java:2.11.1'
+
+    // Monitoring 을 위한 actuator 및 aop 의존성 추가
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation 'org.springframework.boot:spring-boot-starter-actuator:3.3.1'
+    runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {
