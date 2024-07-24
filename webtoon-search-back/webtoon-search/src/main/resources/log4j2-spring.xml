@@ -15,11 +15,13 @@
         <RollingFile name="ActiveFile"
                      fileName="C:/logging-test/${ACTIVE_LOG_FILE_NAME}.log"
                      filePattern="C:/logging-test/${ACTIVE_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
-            <PatternLayout pattern="%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} %c{1.} - %m%n${LOG_EXCEPTION_CONVERSION_WORD}" charset="UTF-8"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+            <JsonLayout complete="false" compact="false" charset="UTF-8">
+                <KeyValuePair key="service" value="simple" />
+            </JsonLayout>
             <DefaultRolloverStrategy>
                 <Delete basePath="C:/logging-test" maxDepth="1">
                     <IfFileName glob="${ACTIVE_LOG_FILE_NAME}*.log.gz"/>
@@ -28,7 +30,6 @@
             </DefaultRolloverStrategy>
         </RollingFile>
 
-<!--        -->
         <RollingFile name="ErrorFile"
                      fileName="C:/logging-test/${ERROR_LOG_FILE_NAME}.log"
                      filePattern="C:/logging-test/${ERROR_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
@@ -37,6 +38,9 @@
                 <SizeBasedTriggeringPolicy size="10MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
+<!--            <JsonLayout complete="false" compact="false" charset="UTF-8">-->
+<!--                <KeyValuePair key="service" value="simple" />-->
+<!--            </JsonLayout>-->
             <DefaultRolloverStrategy>
                 <Delete basePath="C:/logging-test" maxDepth="1">
                     <IfFileName glob="${ERROR_LOG_FILE_NAME}*.log.gz"/>
