@@ -24,7 +24,7 @@ services:
         soft: 65536 # opensearch 사용자의 최대 오픈 파일 수 - 최소 65536으로 설정
         hard: 65536
     volumes:
-      - ./init:/usr/share/opensearch/init:ro # 초기화 스크립트와 매핑 파일을 포함하는 디렉토리, 읽기 전용으로 마운트
+      - ./init:/usr/share/opensearch/init:rw # 초기화 스크립트와 매핑 파일을 포함하는 디렉토리, 읽기 쓰기 전용으로 마운트
       - opensearch-data1:/usr/share/opensearch/data # 데이터 지속성을 위한 볼륨
     ports:
       - "${OPENSEARCH_PORT:-9200}:9200" # REST API, 환경 변수로 포트 설정 가능

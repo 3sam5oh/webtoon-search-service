@@ -11,7 +11,7 @@ USER root
 
 # 필요한 도구 설치 및 Nori 한국어 형태소 분석기 플러그인 설치
 RUN yum update -y && \
-    yum install -y jq && \
+    yum install -y jq file && \
     yum clean all && \
     rm -rf /var/cache/yum && \
     ${OPENSEARCH_HOME}/bin/opensearch-plugin install --batch ${PLUGIN_NAME}
