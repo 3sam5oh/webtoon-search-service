@@ -11,7 +11,7 @@ services:
       - node.name=opensearch-node1 # 이 컨테이너에서 실행될 노드 이름 지정
       - discovery.type=single-node # 단일 노드 설정
       - bootstrap.memory_lock=true # JVM 힙 메모리 스와핑 비활성화
-      - OPENSEARCH_JAVA_OPTS=-Xms8g -Xmx8g # JVM 힙 메모리를 8GB로 설정
+      - OPENSEARCH_JAVA_OPTS=-Xms4g -Xmx4g # JVM 힙 메모리를 최대 4GB로 설정
       - DISABLE_INSTALL_DEMO_CONFIG=true # 데모 구성 설치 방지
       - DISABLE_SECURITY_PLUGIN=true # 보안 플러그인 비활성화
       - logger.level=INFO # 로그 레벨 설정
@@ -24,7 +24,7 @@ services:
         soft: 65536 # opensearch 사용자의 최대 오픈 파일 수 - 최소 65536으로 설정
         hard: 65536
     volumes:
-      - ./init:/usr/share/opensearch/init:ro # 초기화 스크립트와 매핑 파일을 포함하는 디렉토리, 읽기 전용으로 마운트
+      - ./init:/usr/share/opensearch/init:rw # 초기화 스크립트와 매핑 파일을 포함하는 디렉토리, 읽기 쓰기 전용으로 마운트
       - opensearch-data1:/usr/share/opensearch/data # 데이터 지속성을 위한 볼륨
     ports:
       - "${OPENSEARCH_PORT:-9200}:9200" # REST API, 환경 변수로 포트 설정 가능
@@ -42,11 +42,19 @@ services:
       start_period: 60s
     command: |
       /bin/bash -c "
+      ls -l /usr/share/opensearch/init/
+      file /usr/share/opensearch/init/init-opensearch.sh
       /usr/share/opensearch/opensearch-docker-entrypoint.sh &
-      sleep 30 &&
-      /usr/share/opensearch/init/init-opensearch.sh &&
+      sleep 30
+      bash -x /usr/share/opensearch/init/init-opensearch.sh
       tail -f /dev/null
       "
+#        /bin/bash -c "
+#        /usr/share/opensearch/opensearch-docker-entrypoint.sh &
+#        while ! curl -s http://localhost:9200 > /dev/null; do sleep 1; done
+#        /usr/share/opensearch/init/init-opensearch.sh
+#        tail -f /dev/null
+#        "
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2.15.0 # 특정 버전 사용
