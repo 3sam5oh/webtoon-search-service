@@ -29,7 +29,6 @@ public class SelectRecordAdapter implements AddRecordPort {
     private SelectRecordEntity toEntity(SelectWebtoonDTO dto) {
 
         return new SelectRecordEntity(
-                0,
                 dto.getId(),
                 dto.getUrl(),
                 dto.getTitle(),

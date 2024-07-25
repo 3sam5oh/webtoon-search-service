@@ -26,8 +26,8 @@ public class SelectRecordController {
                 webtoonRequest.getTitle(),
                 webtoonRequest.getPlatform()
         )))
-            return new ApiResponse<>();
+            return new ApiResponse<>(true);
 
-        return new ApiResponse<>();
+        return new ApiResponse<>(false);
     }
 }

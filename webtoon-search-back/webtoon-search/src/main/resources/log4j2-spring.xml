@@ -19,8 +19,16 @@
                 <SizeBasedTriggeringPolicy size="10MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <JsonLayout complete="false" compact="false" charset="UTF-8">
-                <KeyValuePair key="service" value="simple" />
+            <JsonLayout complete="true" compact="false" charset="UTF-8" eventEol="true">
+                <KeyValuePair key="uid" value="$${ctx:uid}" />
+                <KeyvaluePair key="gender" value="$${ctx:gender}" />
+                <KeyvaluePair key="age" value="$${ctx:age}" />
+                <KeyvaluePair key="url" value="$${ctx:url}" />
+                <KeyvaluePair key="title" value="$${ctx:title}" />
+                <KeyvaluePair key="platform" value="$${ctx:platform}" />
+                <KeyvaluePair key="days" value="$${ctx:days}" />
+                <KeyvaluePair key="isEnd" value="$${ctx:isEnd}" />
+                <KeyvaluePair key="isFree" value="$${ctx:isFree}" />
             </JsonLayout>
             <DefaultRolloverStrategy>
                 <Delete basePath="C:/logging-test" maxDepth="1">

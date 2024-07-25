@@ -7,6 +7,7 @@ import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/webtoons")
 @Counted(value = "search.request.count", extraTags = {"class", "search-webtoon-controller"})
 @RequiredArgsConstructor
+@Slf4j
 public class SearchWebtoonController {
     private final SearchWebtoonUseCase searchWebtoonUseCase;
 
@@ -31,6 +33,8 @@ public class SearchWebtoonController {
 
     @GetMapping("health")
     public String healthCheck() {
+
+        log.info("test success");
         return "fine working!";
     }
 }

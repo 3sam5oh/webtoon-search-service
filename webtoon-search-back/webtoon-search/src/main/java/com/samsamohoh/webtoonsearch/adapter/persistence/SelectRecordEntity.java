@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 
-@Entity(name = "")
+@Entity(name = "record")
 @AllArgsConstructor
 @NoArgsConstructor
 public class SelectRecordEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @Column
     private String uid;
@@ -21,4 +21,10 @@ public class SelectRecordEntity {
     @Column
     private String platform;
 
+    public SelectRecordEntity(String uid, String url, String title, String platform) {
+        this.uid = uid;
+        this.url = url;
+        this.title = title;
+        this.platform = platform;
+    }
 }
