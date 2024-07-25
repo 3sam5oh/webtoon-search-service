@@ -2,6 +2,11 @@
 
 set -e
 
+# DEBUG 모드 설정
+if [ "$DEBUG" = "true" ]; then
+    set -x  # 디버그 모드 활성화
+fi
+
 INDEX_NAME="webtoon-kr"
 OPENSEARCH_URL="http://localhost:9200"
 OPENSEARCH_HOME="/usr/share/opensearch"
@@ -34,3 +39,8 @@ else
 fi
 
 echo "Initialization completed"
+
+# DEBUG 모드 비활성화
+if [ "$DEBUG" = "true" ]; then
+    set +x
+fi

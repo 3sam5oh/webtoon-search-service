@@ -1,0 +1,22 @@
+# 최상위 .editorconfig 파일임을 명시
+root = true
+
+# 모든 파일에 대한 기본 설정
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+# 쉘 스크립트 파일에 대한 설정
+[*.sh]
+end_of_line = lf
+
+# Dockerfile에 대한 설정
+[Dockerfile]
+end_of_line = lf
+
+# YAML 파일에 대한 설정
+[*.yml]
+indent_style = space
+indent_size = 2

@@ -11,7 +11,7 @@ services:
       - node.name=opensearch-node1 # 이 컨테이너에서 실행될 노드 이름 지정
       - discovery.type=single-node # 단일 노드 설정
       - bootstrap.memory_lock=true # JVM 힙 메모리 스와핑 비활성화
-      - OPENSEARCH_JAVA_OPTS=-Xms8g -Xmx8g # JVM 힙 메모리를 8GB로 설정
+      - OPENSEARCH_JAVA_OPTS=-Xms4g -Xmx4g # JVM 힙 메모리를 최대 4GB로 설정
       - DISABLE_INSTALL_DEMO_CONFIG=true # 데모 구성 설치 방지
       - DISABLE_SECURITY_PLUGIN=true # 보안 플러그인 비활성화
       - logger.level=INFO # 로그 레벨 설정

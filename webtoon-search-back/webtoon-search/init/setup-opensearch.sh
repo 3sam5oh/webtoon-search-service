@@ -2,6 +2,11 @@
 
 set -e
 
+# DEBUG 모드 설정
+if [ "$DEBUG" = "true" ]; then
+    set -x  # 디버그 모드 활성화
+fi
+
 API_URL="https://korea-webtoon-api-cc7dda2f0d77.herokuapp.com/webtoons"
 OPENSEARCH_URL="http://localhost:9200"
 INDEX_NAME="webtoon-kr"
@@ -63,3 +68,8 @@ echo "최종 인덱스 상태:"
 echo "$INDEX_STATUS"
 
 echo "설정 완료."
+
+# DEBUG 모드 비활성화
+if [ "$DEBUG" = "true" ]; then
+    set +x
+fi
