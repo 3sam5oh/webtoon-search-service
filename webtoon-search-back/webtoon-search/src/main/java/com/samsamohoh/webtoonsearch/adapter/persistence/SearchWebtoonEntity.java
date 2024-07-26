@@ -9,7 +9,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 import java.util.List;
 
 @Getter
-@Document(indexName = "webtoons")
+@Document(indexName = "webtoon-kr")
 public class SearchWebtoonEntity {
     @Id
     private String id;
