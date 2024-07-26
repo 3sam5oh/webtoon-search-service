@@ -1,0 +1,12 @@
+# 모든 텍스트 파일에 대해 LF를 사용
+* text=auto eol=lf
+
+# 특정 파일 유형에 대해 LF를 사용
+*.sh text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.dockerfile text eol=lf
+*.json text eol=lf
+*.conf text eol=lf
+*.properties text eol=lf
+*.ini text eol=lf
