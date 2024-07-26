@@ -4,7 +4,7 @@ set -e
 
 # DEBUG 모드 설정
 if [ "$DEBUG" = "true" ]; then
-    set -x  # 디버그 모드 활성화
+    set -x  # 디버그 모드 활성화 (Dockerfile에 false로 비활성화 상태)
 fi
 
 API_URL="https://korea-webtoon-api-cc7dda2f0d77.herokuapp.com/webtoons"

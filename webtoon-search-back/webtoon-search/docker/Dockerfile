@@ -21,7 +21,7 @@ RUN if [ "$DEBUG" = "true" ]; then \
         echo "logger.level: DEBUG" >> ${OPENSEARCH_HOME}/config/opensearch.yml; \
     fi
 
-# 초기화 스크립트 복사 및 권한 설정
+# 초기화 스크립트 복사 및 권한 설정 (수정 필요)
 COPY init/ ${OPENSEARCH_HOME}/init/
 RUN chmod +x ${OPENSEARCH_HOME}/init/*.sh && \
     chown -R opensearch:opensearch ${OPENSEARCH_HOME}

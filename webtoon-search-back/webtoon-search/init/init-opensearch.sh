@@ -4,7 +4,7 @@ set -e
 
 # DEBUG 모드 설정
 if [ "$DEBUG" = "true" ]; then
-    set -x  # 디버그 모드 활성화
+    set -x  # 디버그 모드 활성화 (문제가 없을 때는 Dockerfile에 false로 설정)
 fi
 
 INDEX_NAME="webtoon-kr"

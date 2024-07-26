@@ -9,7 +9,7 @@ services:
     environment:
       - cluster.name=opensearch-cluster # 클러스터 이름 지정
       - node.name=opensearch-node1 # 이 컨테이너에서 실행될 노드 이름 지정
-      - discovery.type=single-node # 단일 노드 설정
+      - discovery.type=single-node # 단일 노드 설정 (테스트 환경)
       - bootstrap.memory_lock=true # JVM 힙 메모리 스와핑 비활성화
       - OPENSEARCH_JAVA_OPTS=-Xms4g -Xmx4g # JVM 힙 메모리를 최대 4GB로 설정
       - DISABLE_INSTALL_DEMO_CONFIG=true # 데모 구성 설치 방지
@@ -49,12 +49,6 @@ services:
       bash -x /usr/share/opensearch/init/init-opensearch.sh
       tail -f /dev/null
       "
-#        /bin/bash -c "
-#        /usr/share/opensearch/opensearch-docker-entrypoint.sh &
-#        while ! curl -s http://localhost:9200 > /dev/null; do sleep 1; done
-#        /usr/share/opensearch/init/init-opensearch.sh
-#        tail -f /dev/null
-#        "
 
   opensearch-dashboards:
     image: opensearchproject/opensearch-dashboards:2.15.0 # 특정 버전 사용
