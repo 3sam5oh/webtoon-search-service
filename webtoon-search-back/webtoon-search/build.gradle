@@ -19,6 +19,11 @@ configurations {
     }
 }
 
+// 모든 구성에 대해 spring-boot-starter-logging 모듈(logback 모듈) 제거
+configurations.all {
+    exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+}
+
 repositories {
     mavenCentral()
 }
@@ -34,6 +39,7 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     runtimeOnly 'com.h2database:h2'
+    runtimeOnly 'org.postgresql:postgresql'
     runtimeOnly 'com.mysql:mysql-connector-j'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
@@ -48,6 +54,9 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-actuator:3.3.1'
     runtimeOnly 'io.micrometer:micrometer-registry-prometheus'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+    // log4j2 를 위한 의존성 추가
+    implementation("org.springframework.boot:spring-boot-starter-log4j2")
 }
 
 tasks.named('test') {

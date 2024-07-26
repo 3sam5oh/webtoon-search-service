@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Properties>
+        <Property name="LOG_EXCEPTION_CONVERSION_WORD">%xwEx</Property>
+        <Property name="LOG_LEVEL_PATTERN">%5p</Property>
+        <Property name="ACTIVE_LOG_FILE_NAME">spring-active</Property>
+        <Property name="ERROR_LOG_FILE_NAME">spring-error</Property>
+        <Property name="LOG_DATEFORMAT_PATTERN">yyyy-MM-dd'T'HH:mm:ss.SSSXXX</Property>
+        <Property name="LOGGED_APPLICATION_NAME">WebtoonSearch</Property>
+    </Properties>
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT" follow="true">
+            <PatternLayout pattern="%d{${LOG_DATEFORMAT_PATTERN}} %p %c{1.} - %m%n${LOG_EXCEPTION_CONVERSION_WORD}" charset="UTF-8"/>
+        </Console>
+        <RollingFile name="ActiveFile"
+                     fileName="C:/logging-test/${ACTIVE_LOG_FILE_NAME}.log"
+                     filePattern="C:/logging-test/${ACTIVE_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <JsonLayout complete="true" compact="false" charset="UTF-8" eventEol="true">
+                <KeyValuePair key="uid" value="$${ctx:uid}" />
+                <KeyvaluePair key="gender" value="$${ctx:gender}" />
+                <KeyvaluePair key="age" value="$${ctx:age}" />
+                <KeyvaluePair key="url" value="$${ctx:url}" />
+                <KeyvaluePair key="title" value="$${ctx:title}" />
+                <KeyvaluePair key="platform" value="$${ctx:platform}" />
+                <KeyvaluePair key="days" value="$${ctx:days}" />
+                <KeyvaluePair key="isEnd" value="$${ctx:isEnd}" />
+                <KeyvaluePair key="isFree" value="$${ctx:isFree}" />
+            </JsonLayout>
+            <DefaultRolloverStrategy>
+                <Delete basePath="C:/logging-test" maxDepth="1">
+                    <IfFileName glob="${ACTIVE_LOG_FILE_NAME}*.log.gz"/>
+                    <IfLastModified age="15d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+
+        <RollingFile name="ErrorFile"
+                     fileName="C:/logging-test/${ERROR_LOG_FILE_NAME}.log"
+                     filePattern="C:/logging-test/${ERROR_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+            <PatternLayout pattern="%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} %c{1.} - %m%n${LOG_EXCEPTION_CONVERSION_WORD}" charset="UTF-8"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+<!--            <JsonLayout complete="false" compact="false" charset="UTF-8">-->
+<!--                <KeyValuePair key="service" value="simple" />-->
+<!--            </JsonLayout>-->
+            <DefaultRolloverStrategy>
+                <Delete basePath="C:/logging-test" maxDepth="1">
+                    <IfFileName glob="${ERROR_LOG_FILE_NAME}*.log.gz"/>
+                    <IfLastModified age="15d"/>
+                </Delete>
+            </DefaultRolloverStrategy>
+        </RollingFile>
+    </Appenders>
+    <Loggers>
+        <Logger name="com.samsamohoh.webtoonsearch" level="info" additivity="false">
+            <AppenderRef ref="ActiveFile"/>
+        </Logger>
+        <Logger name="com.samsamohoh.webtoonsearch.WebtoonSearchApplication" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Logger>
+        <Logger name="org.springframework" level="info" additivity="false">
+            <AppenderRef ref="Console"/>
+        </Logger>
+        <Root level="warn">
+            <AppenderRef ref="Console"/>
+            <AppenderRef ref="ErrorFile"/>
+        </Root>
+    </Loggers>
+</Configuration>

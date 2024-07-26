@@ -1,0 +1,10 @@
+FROM amazoncorretto:21-alpine-jdk
+
+# JAR 파일 복사
+COPY build/libs/*.jar app.jar
+
+# 포트 노출 - 생성된 컨테이너에 열어줄 이미지를 정의
+EXPOSE 8080
+
+# 애플리케이션 실행 // ENTRYPOINT - 무조건적인 실행, CMD - 실행 시의 옵션에 따라 변경 가능
+ENTRYPOINT ["java", "-jar", "/app.jar"]

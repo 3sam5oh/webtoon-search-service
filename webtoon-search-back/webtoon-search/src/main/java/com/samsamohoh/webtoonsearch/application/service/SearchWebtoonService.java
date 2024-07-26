@@ -6,6 +6,7 @@ import com.samsamohoh.webtoonsearch.application.port.in.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonQuery;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
+import com.samsamohoh.webtoonsearch.domain.SearchableWebtoon;
 import io.micrometer.core.instrument.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

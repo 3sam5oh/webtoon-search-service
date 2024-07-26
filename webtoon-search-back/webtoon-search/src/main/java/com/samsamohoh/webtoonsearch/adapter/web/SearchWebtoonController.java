@@ -6,11 +6,8 @@ import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.MeterRegistry;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,15 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/webtoons")
 @Counted(value = "search.request.count", extraTags = {"class", "search-webtoon-controller"})
+@RequiredArgsConstructor
+@Slf4j
 public class SearchWebtoonController {
     private final SearchWebtoonUseCase searchWebtoonUseCase;
-    private final MeterRegistry meterRegistry;
-
-    @Autowired
-    public SearchWebtoonController(SearchWebtoonUseCase searchWebtoonUseCase, MeterRegistry meterRegistry) {
-        this.searchWebtoonUseCase = searchWebtoonUseCase;
-        this.meterRegistry = meterRegistry;
-    }
 
     @Timed(value = "search.request.duration"
             , extraTags = {"class", "search-webtoon-controller", "endpoint", "/webtoons/search"}
@@ -41,7 +33,8 @@ public class SearchWebtoonController {
 
     @GetMapping("health")
     public String healthCheck() {
+
+        log.info("test success");
         return "fine working!";
     }
-
 }
