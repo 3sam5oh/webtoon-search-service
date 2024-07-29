@@ -1,8 +1,8 @@
-package com.samsamohoh.webtoonsearch.adapter.web;
+package com.samsamohoh.webtoonsearch.adapter.web.webtoon;
 
-import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonCommand;
-import com.samsamohoh.webtoonsearch.application.port.in.WebtoonResult;
-import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonUseCase;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;

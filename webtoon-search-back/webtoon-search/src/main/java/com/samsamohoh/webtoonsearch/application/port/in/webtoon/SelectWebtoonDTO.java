@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.application.port.in;
+package com.samsamohoh.webtoonsearch.application.port.in.webtoon;
 
 import lombok.Value;
 

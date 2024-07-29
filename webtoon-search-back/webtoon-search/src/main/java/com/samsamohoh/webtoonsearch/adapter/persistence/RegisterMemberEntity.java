@@ -11,7 +11,7 @@ import lombok.Setter;
 @Table(name = "users")  // 테이블 이름 명시
 @Getter
 @Setter
-public class UserEntity {
+public class RegisterMemberEntity {
 
     @Id
     @Column(name = "naver_id")  // 컬럼 이름 명시

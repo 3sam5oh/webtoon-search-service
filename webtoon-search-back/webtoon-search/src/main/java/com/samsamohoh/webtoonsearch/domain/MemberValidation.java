@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class User {
+public class MemberValidation {
 
     private String email;
     private String gender;
@@ -13,7 +13,7 @@ public class User {
     private String age;
     private String nickname;
 
-    public User(String email, String gender, String naverId, String age, String nickname) {
+    public MemberValidation(String email, String gender, String naverId, String age, String nickname) {
         this.email = email;
         this.gender = gender;
         this.naverId = naverId;

@@ -1,8 +1,7 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
-import com.samsamohoh.webtoonsearch.adapter.web.SelectRecordRequest;
-import com.samsamohoh.webtoonsearch.application.port.in.SelectRecordUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.SelectWebtoonDTO;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectRecordUseCase;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectWebtoonDTO;
 import com.samsamohoh.webtoonsearch.application.port.out.AddRecordPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

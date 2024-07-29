@@ -2,5 +2,5 @@ package com.samsamohoh.webtoonsearch.adapter.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UserRepository extends JpaRepository<UserEntity, String> {
+public interface MemberPersistenceAdapter extends JpaRepository<RegisterMemberEntity, String> {
 }

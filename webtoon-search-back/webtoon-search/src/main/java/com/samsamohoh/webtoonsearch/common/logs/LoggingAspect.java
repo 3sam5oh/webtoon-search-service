@@ -1,6 +1,6 @@
 package com.samsamohoh.webtoonsearch.common.logs;
 
-import com.samsamohoh.webtoonsearch.adapter.web.SelectRecordRequest;
+import com.samsamohoh.webtoonsearch.adapter.web.webtoon.SelectRecordRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class LoggingAspect {
 
-    @Pointcut("execution(* com.samsamohoh.webtoonsearch.adapter.web.SelectRecordController.*(..))")
+    @Pointcut("execution(* com.samsamohoh.webtoonsearch.adapter.web.webtoon.SelectRecordController.*(..))")
     public void activeLogPointcut() {}
 
     /*
