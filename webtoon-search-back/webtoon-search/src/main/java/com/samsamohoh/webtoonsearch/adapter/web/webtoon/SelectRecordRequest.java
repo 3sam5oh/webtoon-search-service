@@ -1,6 +1,5 @@
-package com.samsamohoh.webtoonsearch.adapter.web;
+package com.samsamohoh.webtoonsearch.adapter.web.webtoon;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Value;
 

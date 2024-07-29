@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.adapter.web;
+package com.samsamohoh.webtoonsearch.adapter.web.member;
 
 import lombok.Getter;
 import lombok.Setter;

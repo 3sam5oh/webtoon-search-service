@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
    @Counted 와 @Timed 만으로 메트릭 정의
  */
 @Configuration
-public class MetricsConfig{
+public class MetricsConfig {
 
     @Bean
     public CountedAspect countedAspect(MeterRegistry meterRegistry) {

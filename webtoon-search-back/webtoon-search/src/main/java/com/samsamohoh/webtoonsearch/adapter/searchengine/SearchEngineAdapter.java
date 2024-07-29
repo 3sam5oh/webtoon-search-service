@@ -2,9 +2,9 @@ package com.samsamohoh.webtoonsearch.adapter.searchengine;
 
 import com.samsamohoh.webtoonsearch.adapter.persistence.SearchPersistenceAdapter;
 import com.samsamohoh.webtoonsearch.adapter.persistence.SearchWebtoonEntity;
-import com.samsamohoh.webtoonsearch.application.port.in.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
-import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonQuery;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.LoadWebtoonQuery;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Tag;
@@ -12,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;

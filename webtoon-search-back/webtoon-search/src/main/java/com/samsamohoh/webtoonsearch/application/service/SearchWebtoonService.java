@@ -1,12 +1,11 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
-import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonCommand;
-import com.samsamohoh.webtoonsearch.application.port.in.SearchWebtoonUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
-import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonQuery;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.LoadWebtoonQuery;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
-import com.samsamohoh.webtoonsearch.domain.SearchableWebtoon;
 import io.micrometer.core.instrument.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -33,11 +32,11 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
     @Override
     public WebtoonResult searchWebtoons(SearchWebtoonCommand command) {
 
-        if(isNull(command, "search.condition.null.count"
-                ,"title is null"
-                , Arrays.asList(Tag.of("class","search-webtoon-service"),
-                                Tag.of("method","search-webtoons"),
-                                Tag.of("endpoint","/webtoons/search")))
+        if (isNull(command, "search.condition.null.count"
+                , "title is null"
+                , Arrays.asList(Tag.of("class", "search-webtoon-service"),
+                        Tag.of("method", "search-webtoons"),
+                        Tag.of("endpoint", "/webtoons/search")))
         )
             throw new IllegalArgumentException("검색 조건이 존재 하지 않음.");
 
@@ -48,7 +47,7 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
     private boolean isNull(SearchWebtoonCommand data
             , String metricName
             , String description
-            , List<Tag> tags){
+            , List<Tag> tags) {
 
         if (data == null || data.getQuery() == null || data.getQuery().isEmpty()) {
             customMetrics.getCounter(metricName, description, tags).increment();

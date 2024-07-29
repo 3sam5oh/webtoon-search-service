@@ -23,7 +23,9 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // 필요한 경우 CSRF 설정을 조정하세요.
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/**").permitAll() // API 엔드포인트에 대한 접근 허용
+                                .requestMatchers("/logins/**").permitAll() // API 엔드포인트에 대한 접근 허용
+                                .requestMatchers("/webtoons/**").permitAll()
+                                .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .cors(withDefaults()); // 기본 CORS 설정 적용
