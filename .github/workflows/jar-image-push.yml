@@ -1,5 +1,5 @@
 # GitHub Actions 워크플로우 이름 설정
-name: dockerhub-image-push
+name: dockerhub-jar-image-push
 
 # 워크플로우 트리거 조건 설정
 on:
