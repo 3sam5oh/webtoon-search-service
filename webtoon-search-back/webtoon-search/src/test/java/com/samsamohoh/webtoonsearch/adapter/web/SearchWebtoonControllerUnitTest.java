@@ -6,8 +6,6 @@ import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCom
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -32,13 +30,11 @@ class SearchWebtoonControllerUnitTest {
     @Mock
     private SearchWebtoonUseCase searchWebtoonUseCase;
 
-    private MeterRegistry meterRegistry;
     private SearchWebtoonController controller;
 
     @BeforeEach
     void setUp() {
-        meterRegistry = new SimpleMeterRegistry();
-        controller = new SearchWebtoonController(searchWebtoonUseCase, meterRegistry);
+        controller = new SearchWebtoonController(searchWebtoonUseCase);
         logger.info("테스트 설정 완료: 컨트롤러 생성됨");
     }
 
