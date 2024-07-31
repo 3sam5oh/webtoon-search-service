@@ -16,6 +16,7 @@ RUN ./gradlew dependencies --no-daemon
 # --no-daemon 옵션은 Gradle 데몬을 사용하지 않아 메모리 사용을 줄임
 COPY . .
 RUN ./gradlew build --no-daemon
+RUN ls -la /app/build/libs/
 
 # 런타임 스테이지: 실제 애플리케이션이 실행될 환경 설정
 FROM amazoncorretto:21-alpine-jdk
