@@ -1,16 +1,14 @@
 package com.samsamohoh.webtoonsearch.adapter.web.member;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
-@Getter
-@Setter
+@Value
 public class OAuthResponse {
 
-    private String email;
-    private String gender;
-    private String id;
-    private String age;
-    private String nickname;
+    String email;
+    String gender;
+    String naverId;
+    String age;
+    String nickname;
 
 }

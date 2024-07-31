@@ -1,7 +1,8 @@
 package com.samsamohoh.webtoonsearch.application.port.out;
 
-import com.samsamohoh.webtoonsearch.domain.MemberValidation;
+
+import com.samsamohoh.webtoonsearch.application.port.in.member.RegisterMemberCommand;
 
 public interface SaveMemberPort {
-    void saveUser(MemberValidation memberValidation);
+    void saveMember(RegisterMemberCommand registerMemberCommand);
 }

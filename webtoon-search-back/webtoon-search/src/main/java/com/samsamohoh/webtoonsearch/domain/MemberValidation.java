@@ -1,10 +1,10 @@
 package com.samsamohoh.webtoonsearch.domain;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Builder;
+import lombok.Value;
 
-@Getter
-@Setter
+@Value
+@Builder
 public class MemberValidation {
 
     private String email;
@@ -12,13 +12,5 @@ public class MemberValidation {
     private String naverId;
     private String age;
     private String nickname;
-
-    public MemberValidation(String email, String gender, String naverId, String age, String nickname) {
-        this.email = email;
-        this.gender = gender;
-        this.naverId = naverId;
-        this.age = age;
-        this.nickname = nickname;
-    }
 
 }
