@@ -28,6 +28,9 @@ public class SecurityConfig {
                                 .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated()
                 )
+//                .oauth2Login(oauth2 -> oauth2
+//                        .defaultSuccessUrl("/", true) // 로그인 성공 후 리다이렉트 URL
+//                )
                 .cors(withDefaults()); // 기본 CORS 설정 적용
 
         return http.build();
@@ -42,7 +45,7 @@ public class SecurityConfig {
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/api/**", configuration);
+        source.registerCorsConfiguration("/**", configuration);
         return source;
     }
 }
