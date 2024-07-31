@@ -32,7 +32,7 @@ ENV MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,metrics
 
 # 빌드된 JAR 파일 이름 설정 및 복사
 # ${JAR_FILE}을 사용하여 빌드 시 JAR 파일 이름을 유연하게 지정할 수 있음
-ARG JAR_FILE=webtoon-search-back.jar
+ARG JAR_FILE=webtoon-search-*.jar
 COPY --from=builder /app/build/libs/${JAR_FILE} app.jar
 
 # 애플리케이션이 사용할 포트 명시 (문서화 목적)
