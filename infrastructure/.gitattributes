@@ -1,0 +1,7 @@
+# 모든 텍스트 파일에 대해 LF를 사용
+* text=auto eol=lf
+
+# 특정 파일 유형에 대해 LF를 사용
+*.sh text eol=lf
+*.tf text eol=lf
+

@@ -45,7 +45,7 @@ jobs:
           context: ./webtoon-search-back/webtoon-search  # Dockerfile이 위치한 디렉토리 경로
           file: ./webtoon-search-back/webtoon-search/docker/Dockerfile-spring  # 사용할 Dockerfile 경로
           push: true  # 빌드 후 이미지 푸시 여부
-          platforms: linux/amd64  # 멀티 아키텍처 빌드 설정 (필요할 시 linux/arm64 추가)
+          platforms: linux/amd64, linux/arm64  # 멀티 아키텍처 빌드 설정
           tags: |
             ${{ secrets.DOCKER_USERNAME }}/webtoon-search:latest
             ${{ secrets.DOCKER_USERNAME }}/webtoon-search:${{ github.sha }}
