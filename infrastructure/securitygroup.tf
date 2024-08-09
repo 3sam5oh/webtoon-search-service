@@ -1,4 +1,6 @@
-# bastion 모듈
+#############################
+# Bastion 보안 그룹 (조건부)
+#############################
 module "bastion_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.0"
@@ -23,7 +25,9 @@ module "bastion_sg" {
   tags = local.tags
 }
 
-# Security Group 모듈
+#############################
+# 애플리케이션 보안 그룹
+#############################
 module "app_sg" {
   source  = "terraform-aws-modules/security-group/aws"
   version = "~> 5.0"
