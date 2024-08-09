@@ -112,21 +112,13 @@ variable "bastion_ingress_cidr" {
   type        = string
 }
 
-#############################
-# EBS 관련 설정
-#############################
-variable "use_ebs" {
-  description = "Whether to use EBS volumes"
-  type        = bool
-}
-
-variable "ebs_config" {
-  description = "EBS volume configuration"
-  type = object({
-    volume_size = number
-    volume_type = string
-  })
-}
+# variable "ebs_config" {
+#   description = "EBS volume configuration"
+#   type = object({
+#     volume_size = number
+#     volume_type = string
+#   })
+# }
 
 #############################
 # CloudWatch 관련 설정

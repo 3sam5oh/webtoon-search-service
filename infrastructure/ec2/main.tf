@@ -57,17 +57,6 @@ module "asg" {
   image_id          = var.instance_config[var.environment].ami_id
   enable_monitoring = var.enable_detailed_monitoring
 
-  # EBS 볼륨 설정 (조건부)
-  block_device_mappings = var.use_ebs ? [
-    {
-      device_name = "/dev/sda1"
-      ebs = {
-        volume_size = var.ebs_config.volume_size
-        volume_type = var.ebs_config.volume_type
-      }
-    }
-  ] : []
-
   # 보안 그룹 및 사용자 데이터 설정
   security_groups = [module.app_sg.security_group_id]
   user_data = base64encode(templatefile("${path.module}/scripts/user_data.sh", {
