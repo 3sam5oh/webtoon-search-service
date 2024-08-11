@@ -1,5 +1,7 @@
 package com.samsamohoh.webtoonsearch.adapter.config;
 
+import com.samsamohoh.webtoonsearch.application.port.out.SaveMemberPort;
+import com.samsamohoh.webtoonsearch.application.service.PrincipalOauth2UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -17,6 +19,18 @@ import static org.springframework.security.config.Customizer.withDefaults;
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final SaveMemberPort saveMemberPort;
+
+    // SaveMemberPort를 생성자로 주입받도록 수정합니다.
+    public SecurityConfig(SaveMemberPort saveMemberPort) {
+        this.saveMemberPort = saveMemberPort;
+    }
+
+    @Bean
+    public PrincipalOauth2UserService principalOauth2UserService() {
+        return new PrincipalOauth2UserService(saveMemberPort);
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
@@ -28,9 +42,21 @@ public class SecurityConfig {
                                 .requestMatchers("/actuator/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-//                .oauth2Login(oauth2 -> oauth2
-//                        .defaultSuccessUrl("/", true) // 로그인 성공 후 리다이렉트 URL
-//                )
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .loginPage("/")
+                                .defaultSuccessUrl("http://localhost:8081")
+                                .failureUrl("/")
+                                .userInfoEndpoint(userInfoEndpoint ->
+                                        userInfoEndpoint.userService(principalOauth2UserService())
+                                )
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("http://localhost:8081")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
+                )
                 .cors(withDefaults()); // 기본 CORS 설정 적용
 
         return http.build();
@@ -49,3 +75,4 @@ public class SecurityConfig {
         return source;
     }
 }
+
