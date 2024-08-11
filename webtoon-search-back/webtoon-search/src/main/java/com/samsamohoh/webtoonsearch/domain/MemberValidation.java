@@ -6,11 +6,12 @@ import lombok.Value;
 @Value
 @Builder
 public class MemberValidation {
+    String email;
+    String gender;
+    String providerId;
+    String age;
+    String nickname;
+    String provider;
 
-    private String email;
-    private String gender;
-    private String naverId;
-    private String age;
-    private String nickname;
 
 }

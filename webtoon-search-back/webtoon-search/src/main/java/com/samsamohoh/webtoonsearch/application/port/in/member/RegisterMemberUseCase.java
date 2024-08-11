@@ -1,5 +1,8 @@
 package com.samsamohoh.webtoonsearch.application.port.in.member;
 
 public interface RegisterMemberUseCase {
-    void registerMember(RegisterMemberCommand command);
+
+    boolean updateMemberInfo(MemberResponseDTO memberResponseDTO);
+    MemberResponseDTO getMemberInfo(String providerId);
+
 }

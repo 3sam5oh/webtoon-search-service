@@ -1,8 +1,8 @@
 package com.samsamohoh.webtoonsearch.application.port.out;
 
-
-import com.samsamohoh.webtoonsearch.application.port.in.member.RegisterMemberCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.member.MemberResponseDTO;
 
 public interface SaveMemberPort {
-    void saveMember(RegisterMemberCommand registerMemberCommand);
+    MemberResponseDTO saveMember(MemberResponseDTO memberResponseDTO);
+    MemberResponseDTO findMemberByProviderId(String providerId);
 }

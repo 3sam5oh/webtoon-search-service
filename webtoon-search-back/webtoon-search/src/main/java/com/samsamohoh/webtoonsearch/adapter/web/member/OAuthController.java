@@ -1,13 +1,15 @@
 package com.samsamohoh.webtoonsearch.adapter.web.member;
 
-import com.samsamohoh.webtoonsearch.application.port.in.member.RegisterMemberCommand;
-import com.samsamohoh.webtoonsearch.application.port.in.member.RegisterMemberUseCase;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 
 @RestController
@@ -15,18 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OAuthController {
 
-    private final RegisterMemberUseCase registerMemberUseCase;
 
-    @PostMapping("/naver")
-    public ResponseEntity<String> registerMember(@RequestBody OAuthResponse oAuthResponse) {
-        RegisterMemberCommand command = new RegisterMemberCommand(
-                oAuthResponse.getEmail(),
-                oAuthResponse.getGender(),
-                oAuthResponse.getNaverId(),
-                oAuthResponse.getAge(),
-                oAuthResponse.getNickname()
-        );
-        registerMemberUseCase.registerMember(command);
-        return ResponseEntity.ok("Member registered successfully");
+    @GetMapping("/loginInfo")
+    @ResponseBody
+    public Map<String, Object>  oauthLoginInfo(Authentication authentication, @AuthenticationPrincipal OAuth2User oAuth2UserPrincipal) {
+
+        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+        Map<String, Object> attributes = oAuth2User.getAttributes();
+
+        System.out.println("attributes::" + attributes);
+
+        return attributes;
     }
+
 }
