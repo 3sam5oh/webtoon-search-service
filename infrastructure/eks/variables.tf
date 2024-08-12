@@ -1,3 +1,5 @@
+# variables.tf
+
 #############################
 # 기본 설정
 #############################
@@ -97,6 +99,11 @@ variable "eks_node_group_desired_size" {
   type        = number
 }
 
+variable "enable_irsa" {
+  description = "Whether to enable IAM Roles for Service Accounts"
+  type        = bool
+}
+
 #############################
 # Bastion host 관련 설정
 #############################
@@ -128,56 +135,77 @@ variable "bastion_ingress_cidr" {
 #############################
 # OpenSearch 관련 설정
 #############################
-variable "opensearch_endpoint" {
-  description = "OpenSearch 엔드포인트"
+variable "opensearch_index" {
+  description = "OpenSearch index name"
   type        = string
 }
 
-variable "opensearch_index" {
-  description = "OpenSearch 인덱스 이름"
+variable "opensearch_engine_version" {
+  description = "OpenSearch engine version"
+  type        = string
+}
+
+variable "opensearch_instance_type" {
+  description = "OpenSearch instance type"
+  type        = string
+}
+
+variable "opensearch_instance_count" {
+  description = "OpenSearch instance count"
+  type        = number
+}
+
+variable "opensearch_az_count" {
+  description = "Number of Availability Zones for OpenSearch"
+  type        = number
+}
+
+variable "opensearch_volume_type" {
+  description = "OpenSearch EBS volume type"
+  type        = string
+}
+
+variable "opensearch_volume_size" {
+  description = "OpenSearch EBS volume size (GiB)"
+  type        = number
+}
+
+variable "opensearch_master_user_name" {
+  description = "OpenSearch master user name"
+  type        = string
+}
+
+variable "opensearch_master_user_password" {
+  description = "OpenSearch master user password"
   type        = string
 }
 
 #############################
-# Helm 차트 관련 설정
+# Nginx Ingress Controller 설정
 #############################
 variable "install_nginx_ingress" {
   description = "Whether to install NGINX Ingress Controller"
   type        = bool
 }
 
-variable "enable_irsa" {
-  description = "Whether to enable IAM Roles for Service Accounts"
-  type        = bool
+variable "nginx_ingress_load_balancer_type" {
+  description = "Nginx Ingress load balancer type"
+  type        = string
 }
 
-variable "eks_cluster_ingress_cidr_blocks" {
-  description = "List of CIDR blocks to allow ingress to EKS cluster"
-  type        = list(string)
-}
-
-variable "eks_cluster_ingress_rules" {
-  description = "List of ingress rules to create for EKS cluster"
-  type        = list(string)
-}
-
-variable "install_ebs_csi_driver" {
-  description = "Whether to install EBS CSI Driver"
-  type        = bool
-}
-
+#############################
+# Fluent Bit 설정
+#############################
 variable "install_fluent_bit" {
   description = "Whether to install Fluent Bit"
   type        = bool
 }
 
-variable "install_kube_state_metrics" {
-  description = "Whether to install Kube State Metrics"
-  type        = bool
-}
-
-variable "install_node_exporter" {
-  description = "Whether to install Node Exporter"
+#############################
+# Helm 차트 관련 설정
+#############################
+variable "install_ebs_csi_driver" {
+  description = "Whether to install EBS CSI Driver"
   type        = bool
 }
 
@@ -191,9 +219,32 @@ variable "install_grafana" {
   type        = bool
 }
 
-variable "install_argocd" {
-  description = "Whether to install ArgoCD"
-  type        = bool
+# variable "install_kube_state_metrics" {
+#   description = "Whether to install Kube State Metrics"
+#   type        = bool
+# }
+#
+# variable "install_node_exporter" {
+#   description = "Whether to install Node Exporter"
+#   type        = bool
+# }
+#
+# variable "install_argocd" {
+#   description = "Whether to install ArgoCD"
+#   type        = bool
+# }
+
+#############################
+# 보안 그룹 설정
+#############################
+variable "eks_cluster_ingress_cidr_blocks" {
+  description = "List of CIDR blocks to allow ingress to EKS cluster"
+  type        = list(string)
+}
+
+variable "eks_cluster_ingress_rules" {
+  description = "List of ingress rules to create for EKS cluster"
+  type        = list(string)
 }
 
 #############################
