@@ -6,6 +6,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
+import org.joda.time.DateTime;
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
 
@@ -25,6 +26,7 @@ public class LoggingAspect {
 
         SelectRecordRequest loggingData = (SelectRecordRequest)joinPoint.getArgs()[0];
 
+        MDC.put("time", DateTime.now().toString());
         MDC.put("uid", loggingData.getId());
         MDC.put("gender", loggingData.getGender());
         MDC.put("age", loggingData.getAge());

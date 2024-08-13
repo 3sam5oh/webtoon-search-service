@@ -38,9 +38,19 @@ COPY --from=builder /app/build/libs/${JAR_FILE} app.jar
 # 애플리케이션이 사용할 포트 명시 (문서화 목적)
 EXPOSE 8080
 
+
+
 # 보안 강화: 비root 사용자 및 그룹 생성
 # 애플리케이션을 비특권 사용자로 실행하여 보안 향상
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+RUN addgroup -S appgroup && adduser -S -h /home/appuser appuser -G appgroup
+
+# 로그 디렉토리 생성 및 권한 설정
+RUN mkdir -p /home/appuser/logs && \
+    chown -R appuser:appgroup /home/appuser/logs && \
+    chmod -R 775 /home/appuser/logs
+
+RUN apk --no-cache add curl
+
 USER appuser:appgroup
 
 # 컨테이너 헬스 체크 설정
@@ -50,7 +60,7 @@ HEALTHCHECK --interval=30s --timeout=3s \
 
 # 애플리케이션 실행 // ENTRYPOINT - 무조건적인 실행, CMD - 실행 시의 옵션에 따라 변경 가능
 # -Djava.security.egd 옵션은 암호화 작업의 엔트로피 소스를 지정하여 시작 시간 개선
-ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
-
+#ENTRYPOINT ["java", "-Djava.security.egd=file:/dev/./urandom", "-jar", "/app/app.jar"]
+ENTRYPOINT ["sh", "-c", "java -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar & tail -f /dev/null"]
 
 
