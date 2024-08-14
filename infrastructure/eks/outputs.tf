@@ -1,3 +1,5 @@
+# outputs.tf
+
 #############################
 # VPC 관련 출력
 #############################
@@ -8,7 +10,7 @@ output "vpc_id" {
 
 output "vpc_cidr" {
   description = "The CIDR block of the VPC"
-  value       = var.vpc_cidr
+  value       = module.vpc.vpc_cidr_block
 }
 
 output "private_subnets" {
@@ -49,14 +51,14 @@ output "eks_cluster_security_group_id" {
   value       = module.eks.cluster_security_group_id
 }
 
-output "eks_node_group_role_arn" {
-  description = "ARN of the EKS node group IAM role"
-  value       = aws_iam_role.eks_node_group_role.arn
+output "eks_node_security_group_id" {
+  description = "Security group ID attached to the EKS nodes"
+  value       = module.eks.node_security_group_id
 }
 
-output "eks_node_group_security_group_ids" {
-  description = "Security group IDs associated with the EKS node group"
-  value       = module.eks.node_security_group_id
+output "eks_oidc_provider_arn" {
+  description = "The ARN of the OIDC Provider"
+  value       = module.eks.oidc_provider_arn
 }
 
 output "eks_cluster_certificate_authority_data" {
@@ -64,27 +66,21 @@ output "eks_cluster_certificate_authority_data" {
   value       = module.eks.cluster_certificate_authority_data
 }
 
-output "eks_oidc_provider" {
-  description = "OIDC provider ARN for the EKS cluster"
-  value       = module.eks.oidc_provider_arn
+output "eks_node_group_role_name" {
+  description = "Name of the EKS node group IAM role"
+  value       = aws_iam_role.eks_node_group_role.name
 }
 
-output "kubeconfig_command" {
-  description = "Command to generate kubeconfig file for the EKS cluster"
-  value       = "aws eks get-token --cluster-name ${module.eks.cluster_name} | kubectl apply -f -"
+# Fluent Bit IAM Role ARN
+output "fluentbit_role_arn" {
+  description = "The ARN of the IAM role for Fluent Bit"
+  value       = aws_iam_role.fluentbit_role.arn
 }
 
-#############################
-# Bastion host 관련 출력
-#############################
-output "bastion_public_ip" {
-  description = "Public IP of the Bastion host"
-  value       = var.create_bastion ? aws_instance.bastion[0].public_ip : null
-}
-
-output "bastion_instance_id" {
-  description = "Instance ID of the Bastion host"
-  value       = var.create_bastion ? aws_instance.bastion[0].id : null
+# Monitoring Security Group ID
+output "monitoring_sg_id" {
+  description = "The ID of the security group for monitoring tools"
+  value       = aws_security_group.monitoring_sg.id
 }
 
 #############################
@@ -98,4 +94,17 @@ output "opensearch_domain_endpoint" {
 output "opensearch_domain_arn" {
   description = "The ARN of the OpenSearch domain"
   value       = aws_opensearch_domain.opensearch.arn
+}
+
+output "opensearch_dashboard_url" {
+  description = "OpenSearch dashboard URL"
+  value       = "https://${aws_opensearch_domain.opensearch.endpoint}/_dashboards/"
+}
+
+#############################
+# SSM 관련 출력
+#############################
+output "ssm_endpoints" {
+  description = "List of SSM VPC endpoint IDs"
+  value       = [aws_vpc_endpoint.ssm.id, aws_vpc_endpoint.ec2messages.id, aws_vpc_endpoint.ssmmessages.id]
 }
