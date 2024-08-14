@@ -122,11 +122,13 @@ module "eks" {
 
   cluster_endpoint_public_access = true
 
-  # 보안 그룹 설정
-  create_cluster_security_group = false
-  create_node_security_group    = false
-  cluster_security_group_id     = module.eks_sg.security_group_id
-  node_security_group_id        = module.eks_sg.security_group_id
+  create_cloudwatch_log_group = false
+
+#   # 보안 그룹 설정
+#   create_cluster_security_group = false
+#   create_node_security_group    = false
+#   cluster_security_group_id     = module.eks_sg.security_group_id
+#   node_security_group_id        = module.eks_sg.security_group_id
 
   # IAM 역할 설정
   create_iam_role = false
@@ -147,10 +149,10 @@ module "eks" {
       create_iam_role = false
       iam_role_arn    = aws_iam_role.eks_node_group_role.arn
 
-      create_security_group          = false
-      vpc_security_group_ids         = [module.eks_sg.security_group_id]
-
-      use_name_prefix                = false
+#       create_security_group          = false
+#       vpc_security_group_ids         = [module.eks_sg.security_group_id]
+#
+#       use_name_prefix                = false
 
       labels = var.environment_variables
 

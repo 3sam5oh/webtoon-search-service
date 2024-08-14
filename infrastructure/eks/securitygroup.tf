@@ -124,7 +124,8 @@ module "eks_sg" {
 }
 
 #############################
-# EKS 노드에서 Prometheus, Grafana, Fluent Bit로의 접근을 허용하는 보안 그룹 설정
+# EKS 노드에서 Prometheus, Grafana
+# Fluent Bit로의 접근을 허용하는 보안 그룹
 #############################
 resource "aws_security_group" "monitoring_sg" {
   name        = "${local.name}-monitoring-sg"
@@ -181,4 +182,3 @@ resource "aws_security_group" "monitoring_sg" {
     }
   )
 }
-
