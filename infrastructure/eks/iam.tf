@@ -148,9 +148,14 @@ resource "aws_iam_role" "fluentbit_role" {
       {
         Effect = "Allow"
         Principal = {
-          Service = "ec2.amazonaws.com"
+          Federated = module.eks.oidc_provider_arn
         }
-        Action = "sts:AssumeRole"
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${module.eks.oidc_provider}:sub": "system:serviceaccount:logging:fluent-bit"
+          }
+        }
       }
     ]
   })
@@ -165,10 +170,10 @@ resource "aws_iam_role_policy_attachment" "fluentbit_opensearch_policy" {
 }
 
 #############################
-# Prometheus & Grafana IAM Role
+# Prometheus IAM Role
 #############################
-resource "aws_iam_role" "prometheus_grafana_role" {
-  name = "${local.name}-prometheus-grafana-role"
+resource "aws_iam_role" "prometheus_role" {
+  name = "${local.name}-prometheus-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -176,9 +181,14 @@ resource "aws_iam_role" "prometheus_grafana_role" {
       {
         Effect = "Allow"
         Principal = {
-          Service = "eks.amazonaws.com"
+          Federated = module.eks.oidc_provider_arn
         }
-        Action = "sts:AssumeRole"
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${module.eks.oidc_provider}:sub": "system:serviceaccount:monitoring:prometheus-server"
+          }
+        }
       }
     ]
   })
@@ -186,13 +196,41 @@ resource "aws_iam_role" "prometheus_grafana_role" {
   tags = local.tags
 }
 
-# Prometheus와 Grafana가 필요로 하는 정책을 붙임
+# Prometheus에 대한 정책을 붙임
 resource "aws_iam_role_policy_attachment" "prometheus_policy" {
-  role       = aws_iam_role.prometheus_grafana_role.name
+  role       = aws_iam_role.prometheus_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusFullAccess"
 }
 
+#############################
+# Grafana IAM Role
+#############################
+resource "aws_iam_role" "grafana_role" {
+  name = "${local.name}-grafana-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Federated = module.eks.oidc_provider_arn
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "${module.eks.oidc_provider}:sub": "system:serviceaccount:monitoring:grafana"
+          }
+        }
+      }
+    ]
+  })
+
+  tags = local.tags
+}
+
+# Grafana에 필요한 정책을 붙임 (예시, 실제 필요한 정책으로 교체해야 함)
 resource "aws_iam_role_policy_attachment" "grafana_policy" {
-  role       = aws_iam_role.prometheus_grafana_role.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonGrafanaFullAccess"
+  role       = aws_iam_role.grafana_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusFullAccess"  # 예시 정책, 실제 필요에 따라 조정 필요
 }

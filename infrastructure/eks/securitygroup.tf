@@ -1,6 +1,5 @@
 # securitygroup.tf
 
-
 #############################
 # SSM 엔드포인트 보안 그룹
 #############################
@@ -138,7 +137,7 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 9090
     protocol    = "tcp"
     description = "Allow Prometheus traffic"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
+    security_groups = [module.eks_sg.security_group_id]
   }
 
   # Grafana 접근 허용
@@ -147,16 +146,16 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 3000
     protocol    = "tcp"
     description = "Allow Grafana traffic"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
+    security_groups = [module.eks_sg.security_group_id]
   }
 
   # Fluent Bit 접근 허용
   ingress {
-    from_port   = 24224
-    to_port     = 24224
+    from_port   = 2020
+    to_port     = 2020
     protocol    = "tcp"
     description = "Allow Fluent Bit traffic"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
+    security_groups = [module.eks_sg.security_group_id]
   }
 
   # Spring Boot 애플리케이션 접근 허용
@@ -165,7 +164,7 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 8080
     protocol    = "tcp"
     description = "Allow Spring Boot traffic"
-    cidr_blocks = [module.vpc.vpc_cidr_block]
+    security_groups = [module.eks_sg.security_group_id]
   }
 
   egress {
@@ -175,6 +174,11 @@ resource "aws_security_group" "monitoring_sg" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
-  tags = local.tags
+  tags = merge(
+    local.tags,
+    {
+      Name = "${local.name}-monitoring-sg"
+    }
+  )
 }
 
