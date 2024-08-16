@@ -40,6 +40,7 @@ public class SecurityConfig {
                                 .requestMatchers("/logins/**").permitAll() // API 엔드포인트에 대한 접근 허용
                                 .requestMatchers("/webtoons/**").permitAll()
                                 .requestMatchers("/actuator/**").permitAll()
+                                .requestMatchers("/h2-console/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login ->
@@ -56,6 +57,10 @@ public class SecurityConfig {
                         .logoutSuccessUrl("http://localhost:8081")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
+                )
+                .headers(headers -> headers
+                        // X-Frame-Options 문제 해결: 동일 출처에서 iframe 허용
+                        .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
                 .cors(withDefaults()); // 기본 CORS 설정 적용
 
