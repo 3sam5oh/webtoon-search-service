@@ -40,6 +40,8 @@ COPY --from=builder /app/build/libs/${JAR_FILE} app.jar
 # 애플리케이션이 사용할 포트 명시 (문서화 목적)
 EXPOSE 8080
 
+RUN apk add --no-cache curl
+
 # 보안 강화: 비root 사용자 및 그룹 생성
 # 애플리케이션을 비특권 사용자로 실행하여 보안 향상
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup

@@ -1,14 +1,18 @@
 package com.samsamohoh.webtoonsearch.common.logs;
 
 import com.samsamohoh.webtoonsearch.adapter.web.webtoon.SelectRecordRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
+
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.joda.time.DateTime;
+
 import org.slf4j.MDC;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDateTime;
 
 @Aspect
 @Component
@@ -26,7 +30,7 @@ public class LoggingAspect {
 
         SelectRecordRequest loggingData = (SelectRecordRequest)joinPoint.getArgs()[0];
 
-        MDC.put("time", DateTime.now().toString());
+        MDC.put("time", LocalDateTime.now().toString());
         MDC.put("uid", loggingData.getId());
         MDC.put("gender", loggingData.getGender());
         MDC.put("age", loggingData.getAge());
