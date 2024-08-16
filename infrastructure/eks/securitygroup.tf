@@ -57,14 +57,14 @@ module "opensearch_sg" {
       to_port                  = 9200
       protocol                 = "tcp"
       description              = "OpenSearch cluster port from EKS nodes"
-      source_security_group_id = module.eks_sg.security_group_id
+      source_security_group_id = module.eks.node_security_group_id
     },
     {
       from_port                = 5601
       to_port                  = 5601
       protocol                 = "tcp"
       description              = "OpenSearch Dashboard port from EKS nodes"
-      source_security_group_id = module.eks_sg.security_group_id
+      source_security_group_id = module.eks.node_security_group_id
     }
   ]
 
@@ -83,49 +83,48 @@ module "opensearch_sg" {
   tags = local.tags
 }
 
+# #############################
+# # EKS 클러스터 보안 그룹
+# #############################
+# module "eks_sg" {
+#   source  = "terraform-aws-modules/security-group/aws"
+#   version = "~> 5.0"
+#
+#   name        = "${local.name}-eks-sg"
+#   description = "Security group for EKS cluster and nodes"
+#   vpc_id      = module.vpc.vpc_id
+#
+#   ingress_with_cidr_blocks = [
+#     {
+#       from_port   = 443
+#       to_port     = 443
+#       protocol    = "tcp"
+#       description = "Allow HTTPS traffic within VPC"
+#       cidr_blocks = module.vpc.vpc_cidr_block
+#     },
+#     {
+#       from_port   = 9200
+#       to_port     = 9200
+#       protocol    = "tcp"
+#       description = "Allow OpenSearch cluster traffic"
+#       cidr_blocks = module.vpc.vpc_cidr_block
+#     },
+#     {
+#       from_port   = 5601
+#       to_port     = 5601
+#       protocol    = "tcp"
+#       description = "Allow OpenSearch Dashboard traffic"
+#       cidr_blocks = module.vpc.vpc_cidr_block
+#     }
+#   ]
+#
+#   egress_rules = ["all-all"]
+#
+#   tags = local.tags
+# }
+
 #############################
-# EKS 클러스터 보안 그룹
-#############################
-module "eks_sg" {
-  source  = "terraform-aws-modules/security-group/aws"
-  version = "~> 5.0"
-
-  name        = "${local.name}-eks-sg"
-  description = "Security group for EKS cluster and nodes"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress_with_cidr_blocks = [
-    {
-      from_port   = 443
-      to_port     = 443
-      protocol    = "tcp"
-      description = "Allow HTTPS traffic within VPC"
-      cidr_blocks = module.vpc.vpc_cidr_block
-    },
-    {
-      from_port   = 9200
-      to_port     = 9200
-      protocol    = "tcp"
-      description = "Allow OpenSearch cluster traffic"
-      cidr_blocks = module.vpc.vpc_cidr_block
-    },
-    {
-      from_port   = 5601
-      to_port     = 5601
-      protocol    = "tcp"
-      description = "Allow OpenSearch Dashboard traffic"
-      cidr_blocks = module.vpc.vpc_cidr_block
-    }
-  ]
-
-  egress_rules = ["all-all"]
-
-  tags = local.tags
-}
-
-#############################
-# EKS 노드에서 Prometheus, Grafana
-# Fluent Bit로의 접근을 허용하는 보안 그룹
+# 모니터링 도구 보안 그룹
 #############################
 resource "aws_security_group" "monitoring_sg" {
   name        = "${local.name}-monitoring-sg"
@@ -138,7 +137,7 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 9090
     protocol    = "tcp"
     description = "Allow Prometheus traffic"
-    security_groups = [module.eks_sg.security_group_id]
+    security_groups = [module.eks.node_security_group_id]
   }
 
   # Grafana 접근 허용
@@ -147,7 +146,7 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 3000
     protocol    = "tcp"
     description = "Allow Grafana traffic"
-    security_groups = [module.eks_sg.security_group_id]
+    security_groups = [module.eks.node_security_group_id]
   }
 
   # Fluent Bit 접근 허용
@@ -156,7 +155,7 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 2020
     protocol    = "tcp"
     description = "Allow Fluent Bit traffic"
-    security_groups = [module.eks_sg.security_group_id]
+    security_groups = [module.eks.node_security_group_id]
   }
 
   # Spring Boot 애플리케이션 접근 허용
@@ -165,7 +164,7 @@ resource "aws_security_group" "monitoring_sg" {
     to_port     = 8080
     protocol    = "tcp"
     description = "Allow Spring Boot traffic"
-    security_groups = [module.eks_sg.security_group_id]
+    security_groups = [module.eks.node_security_group_id]
   }
 
   egress {
@@ -181,4 +180,15 @@ resource "aws_security_group" "monitoring_sg" {
       Name = "${local.name}-monitoring-sg"
     }
   )
+}
+
+# EKS 노드 보안 그룹에 규칙 추가
+resource "aws_security_group_rule" "eks_to_opensearch" {
+  type                     = "egress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = module.eks.node_security_group_id
+  source_security_group_id = module.opensearch_sg.security_group_id
+  description              = "Allow EKS nodes to communicate with OpenSearch"
 }

@@ -66,9 +66,10 @@ output "eks_cluster_certificate_authority_data" {
   value       = module.eks.cluster_certificate_authority_data
 }
 
+# 수정: EKS 모듈에서 생성된 노드 그룹 IAM 역할 이름 출력
 output "eks_node_group_role_name" {
   description = "Name of the EKS node group IAM role"
-  value       = aws_iam_role.eks_node_group_role.name
+  value       = module.eks.eks_managed_node_groups["main"].iam_role_name
 }
 
 # Fluent Bit IAM Role ARN
@@ -107,4 +108,33 @@ output "opensearch_dashboard_url" {
 output "ssm_endpoints" {
   description = "List of SSM VPC endpoint IDs"
   value       = [aws_vpc_endpoint.ssm.id, aws_vpc_endpoint.ec2messages.id, aws_vpc_endpoint.ssmmessages.id]
+}
+
+# 추가: EKS 추가 정책 ARN
+output "eks_additional_policy_arn" {
+  description = "ARN of the additional policy attached to EKS cluster and nodes"
+  value       = aws_iam_policy.eks_additional_policy.arn
+}
+
+# 추가: OpenSearch 보안 그룹 ID
+output "opensearch_security_group_id" {
+  description = "ID of the security group attached to OpenSearch domain"
+  value       = module.opensearch_sg.security_group_id
+}
+
+# 추가: EKS 클러스터 버전
+output "eks_cluster_version" {
+  description = "The Kubernetes server version of the cluster"
+  value       = module.eks.cluster_version
+}
+
+# 추가: EKS 노드 그룹 설정
+output "eks_node_group_config" {
+  description = "EKS node group configuration"
+  value = {
+    min_size     = var.eks_node_group_min_size
+    max_size     = var.eks_node_group_max_size
+    desired_size = var.eks_node_group_desired_size
+    instance_types = var.eks_node_group_instance_types
+  }
 }

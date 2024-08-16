@@ -33,76 +33,76 @@ resource "aws_iam_policy" "ssm_opensearch_access" {
   })
 }
 
-#############################
-# EKS Cluster IAM Role
-#############################
-resource "aws_iam_role" "eks_cluster_role" {
-  name = "${local.name}-eks-cluster-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "eks.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = local.tags
-}
-
-resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
-  role       = aws_iam_role.eks_cluster_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
-  role       = aws_iam_role.eks_cluster_role.name
-}
-
-#############################
-# EKS 노드 그룹 역할
-#############################
-resource "aws_iam_role" "eks_node_group_role" {
-  name = "${local.name}-eks-node"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "ec2.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = local.tags
-}
-
-resource "aws_iam_role_policy_attachment" "eks_node_group_policy_attachment" {
-  for_each = {
-    worker_node = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
-    cni_policy  = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
-    ecr_policy  = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
-    ssm_policy  = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-  }
-
-  policy_arn = each.value
-  role       = aws_iam_role.eks_node_group_role.name
-}
-
-resource "aws_iam_role_policy_attachment" "eks_nodes_ssm_opensearch_policy" {
-  policy_arn = aws_iam_policy.ssm_opensearch_access.arn
-  role       = aws_iam_role.eks_node_group_role.name
-}
+# #############################
+# # EKS Cluster IAM Role
+# #############################
+# resource "aws_iam_role" "eks_cluster_role" {
+#   name = "${local.name}-eks-cluster-role"
+#
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = "sts:AssumeRole"
+#         Effect = "Allow"
+#         Principal = {
+#           Service = "eks.amazonaws.com"
+#         }
+#       }
+#     ]
+#   })
+#
+#   tags = local.tags
+# }
+#
+# resource "aws_iam_role_policy_attachment" "eks_cluster_policy" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+#   role       = aws_iam_role.eks_cluster_role.name
+# }
+#
+# resource "aws_iam_role_policy_attachment" "eks_vpc_resource_controller" {
+#   policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+#   role       = aws_iam_role.eks_cluster_role.name
+# }
+#
+# #############################
+# # EKS 노드 그룹 역할
+# #############################
+# resource "aws_iam_role" "eks_node_group_role" {
+#   name = "${local.name}-eks-node"
+#
+#   assume_role_policy = jsonencode({
+#     Version = "2012-10-17"
+#     Statement = [
+#       {
+#         Action = "sts:AssumeRole"
+#         Effect = "Allow"
+#         Principal = {
+#           Service = "ec2.amazonaws.com"
+#         }
+#       }
+#     ]
+#   })
+#
+#   tags = local.tags
+# }
+#
+# resource "aws_iam_role_policy_attachment" "eks_node_group_policy_attachment" {
+#   for_each = {
+#     worker_node = "arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy"
+#     cni_policy  = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+#     ecr_policy  = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+#     ssm_policy  = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+#   }
+#
+#   policy_arn = each.value
+#   role       = aws_iam_role.eks_node_group_role.name
+# }
+#
+# resource "aws_iam_role_policy_attachment" "eks_nodes_ssm_opensearch_policy" {
+#   policy_arn = aws_iam_policy.ssm_opensearch_access.arn
+#   role       = aws_iam_role.eks_node_group_role.name
+# }
 
 #############################
 # OpenSearch 관리자 역할
@@ -126,10 +126,10 @@ resource "aws_iam_role" "opensearch_admin_role" {
   tags = local.tags
 }
 
-resource "aws_iam_role_policy_attachment" "eks_node_opensearch_access" {
-  policy_arn = aws_iam_policy.ssm_opensearch_access.arn
-  role       = aws_iam_role.eks_node_group_role.name
-}
+# resource "aws_iam_role_policy_attachment" "eks_node_opensearch_access" {
+#   policy_arn = aws_iam_policy.ssm_opensearch_access.arn
+#   role       = aws_iam_role.eks_node_group_role.name
+# }
 
 resource "aws_iam_role_policy_attachment" "opensearch_admin_policy" {
   policy_arn = aws_iam_policy.ssm_opensearch_access.arn
@@ -233,4 +233,24 @@ resource "aws_iam_role" "grafana_role" {
 resource "aws_iam_role_policy_attachment" "grafana_policy" {
   role       = aws_iam_role.grafana_role.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonPrometheusFullAccess"  # 예시 정책, 실제 필요에 따라 조정 필요
+}
+
+# EKS 모듈에 추가할 정책
+resource "aws_iam_policy" "eks_additional_policy" {
+  name        = "${local.name}-eks-additional-policy"
+  path        = "/"
+  description = "Additional policy for EKS cluster and nodes"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "es:ESHttp*"
+        ]
+        Resource = aws_opensearch_domain.opensearch.arn
+      }
+    ]
+  })
 }
