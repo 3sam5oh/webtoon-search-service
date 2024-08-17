@@ -13,13 +13,14 @@
             <PatternLayout pattern="%d{${LOG_DATEFORMAT_PATTERN}} %p %c{1.} - %m%n${LOG_EXCEPTION_CONVERSION_WORD}" charset="UTF-8"/>
         </Console>
         <RollingFile name="ActiveFile"
-                     fileName="C:/logging-test/${ACTIVE_LOG_FILE_NAME}.log"
-                     filePattern="C:/logging-test/${ACTIVE_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+                     fileName="/home/appuser/logs/${ACTIVE_LOG_FILE_NAME}.log"
+                     filePattern="/home/appuser/logs/${ACTIVE_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
                 <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
             </Policies>
-            <JsonLayout complete="true" compact="false" charset="UTF-8" eventEol="true">
+            <JsonLayout complete="true" compact="true" charset="UTF-8" eventEol="true">
+                <KeyValuePair key="time" value="$${ctx:time}" />
                 <KeyValuePair key="uid" value="$${ctx:uid}" />
                 <KeyvaluePair key="gender" value="$${ctx:gender}" />
                 <KeyvaluePair key="age" value="$${ctx:age}" />
@@ -31,7 +32,7 @@
                 <KeyvaluePair key="isFree" value="$${ctx:isFree}" />
             </JsonLayout>
             <DefaultRolloverStrategy>
-                <Delete basePath="C:/logging-test" maxDepth="1">
+                <Delete basePath="/home/appuser/logs" maxDepth="1">
                     <IfFileName glob="${ACTIVE_LOG_FILE_NAME}*.log.gz"/>
                     <IfLastModified age="15d"/>
                 </Delete>
@@ -39,8 +40,8 @@
         </RollingFile>
 
         <RollingFile name="ErrorFile"
-                     fileName="C:/logging-test/${ERROR_LOG_FILE_NAME}.log"
-                     filePattern="C:/logging-test/${ERROR_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
+                     fileName="/home/appuser/logs/${ERROR_LOG_FILE_NAME}.log"
+                     filePattern="/home/appuser/logs/${ERROR_LOG_FILE_NAME}-%d{yyyy-MM-dd}-%i.log.gz">
             <PatternLayout pattern="%d{${LOG_DATEFORMAT_PATTERN}} ${LOG_LEVEL_PATTERN} %c{1.} - %m%n${LOG_EXCEPTION_CONVERSION_WORD}" charset="UTF-8"/>
             <Policies>
                 <SizeBasedTriggeringPolicy size="10MB"/>
@@ -50,7 +51,7 @@
 <!--                <KeyValuePair key="service" value="simple" />-->
 <!--            </JsonLayout>-->
             <DefaultRolloverStrategy>
-                <Delete basePath="C:/logging-test" maxDepth="1">
+                <Delete basePath="/home/appuser/logs" maxDepth="1">
                     <IfFileName glob="${ERROR_LOG_FILE_NAME}*.log.gz"/>
                     <IfLastModified age="15d"/>
                 </Delete>
