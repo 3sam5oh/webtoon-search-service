@@ -1,0 +1,72 @@
+# GitHub Actions 워크플로우 이름 설정
+name: dockerhub-jar-image-push
+
+# 워크플로우 트리거 조건 설정
+on:
+  push:
+    branches:
+      - main  # main 브랜치에 푸시될 때 실행
+  pull_request:
+    branches:
+      - main  # main 브랜치로의 풀 리퀘스트가 생성될 때 실행
+
+# 실행할 작업 정의
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest  # 최신 Ubuntu 환경에서 실행
+    steps:
+      # 단계 1: 리포지토리 코드 체크아웃
+      - name: Checkout repository
+        uses: actions/checkout@v4  # 최신 버전의 checkout 액션 사용
+
+      # gradlew에 실행 권한 부여
+      - name: Grant execute permission for gradlew
+        run: chmod +x ./webtoon-search-back/webtoon-search/gradlew
+
+      # 단계 2: Docker Buildx 설정 (다중 플랫폼 빌드 지원)
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 단계 3: Docker Hub 로그인
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}  # Docker Hub 사용자명 (GitHub 시크릿에서 가져옴)
+          password: ${{ secrets.DOCKER_PASSWORD }}  # Docker Hub 비밀번호 (GitHub 시크릿에서 가져옴)
+
+      # 단계 4: 빌드 시작 시간 기록
+      - name: Get start time
+        run: echo "BUILD_START_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      # 단계 5: Docker 이미지 빌드 및 푸시
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./webtoon-search-back/webtoon-search  # Dockerfile이 위치한 디렉토리 경로
+          file: ./webtoon-search-back/webtoon-search/docker/Dockerfile-spring  # 사용할 Dockerfile 경로
+          push: true  # 빌드 후 이미지 푸시 여부
+          platforms: linux/amd64, linux/arm64  # 멀티 아키텍처 빌드 설정
+          tags: |
+            ${{ secrets.DOCKER_USERNAME }}/webtoon-search:latest
+            ${{ secrets.DOCKER_USERNAME }}/webtoon-search:${{ github.sha }}
+          # 두 개의 태그 사용: 'latest'와 Git commit SHA
+          cache-from: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/webtoon-search:buildcache
+          cache-to: type=registry,ref=${{ secrets.DOCKER_USERNAME }}/webtoon-search:buildcache,mode=max
+          # 빌드 캐시 사용으로 빌드 속도 향상
+
+      # 단계 6: 빌드 종료 시간 기록 및 소요 시간 계산
+      - name: Calculate build time
+        run: |
+          echo "BUILD_END_TIME=$(date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+          START_SECONDS=$(date -d "${{ env.BUILD_START_TIME }}" +%s)
+          END_SECONDS=$(date -d "${{ env.BUILD_END_TIME }}" +%s)
+          echo "BUILD_DURATION=$((END_SECONDS - START_SECONDS))" >> $GITHUB_ENV
+
+      # 단계 7: 빌드 결과 및 시간 정보 출력
+      - name: Print build result
+        run: |
+          echo "빌드 시작 시간: ${{ env.BUILD_START_TIME }}"
+          echo "빌드 종료 시간: ${{ env.BUILD_END_TIME }}"
+          echo "빌드 소요 시간: ${{ env.BUILD_DURATION }} 초"
+          echo "빌드 결과: ${{ job.status }}"
+        # 빌드 과정에 대한 주요 정보를 로그에 출력하여 모니터링 및 디버깅에 활용
