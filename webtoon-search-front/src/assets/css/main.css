@@ -1,0 +1,242 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-size: 20px;
+}
+
+div {
+    font-family: "Pretendard", sans-serif;
+}
+
+li {
+    list-style: none;
+}
+
+a {
+    color: black;
+    text-decoration: none;
+}
+
+body {
+    /*background-color: #f1f3f4;*/
+}
+
+.content, .contentFind {
+    width: 1280px;
+    height: 1000px;
+    margin: 30px auto;
+    padding: 20px;
+    /*background-color: red;*/
+}
+
+
+.context div > ul > li {
+    font-size: 18px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.05);
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+}
+
+/************** 헤더 **************/
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 왼쪽 정렬 */
+    height: 140px;
+    position: relative;
+    top: 0;
+    z-index: 99;
+    background-color: #fff;
+    margin: 0 auto;
+    padding: 0 310px 0 320px;
+    box-shadow: 0 1px rgba(0, 1, 0, 0.1); /* 그림자 추가 */
+}
+
+.headerName {
+    flex-direction: column;
+    margin-right: 40px; /* 검색 창과의 간격 조정 */
+}
+
+.headerName1 {
+    font-size: 32px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.headerName2 {
+    font-size: 16px;
+    font-weight: lighter;
+    text-align: left;
+    color: gray;
+}
+
+.search-container {
+    display: flex;
+}
+
+
+
+.loginBtn a img, .logoutBtn a img {
+    width: 135px;
+    margin-right: 20px;
+}
+
+
+/* body */
+.search-container{
+    width: 520px;
+    margin: 10px auto;
+}
+
+.search-container input {
+    width: 100%;
+    max-width: 500px;
+    padding: 15px 25px 15px 25px;
+    border: 1px solid #f1f3f4;
+    border-radius: 30px;
+    background-color: #f1f3f4;
+    outline: none;
+    font-size: 16px;
+}
+
+.search-container .search-button {
+    width: 50px;
+    height: 50px;
+    background-image: url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-256.png');
+    background-size: 40px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #fff;
+    border: 1px solid #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+}
+
+.memberInfo{
+    display: flex;
+}
+.memberInfo div {
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.webtoonRecommend {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 16px; /* 이미지 사이의 간격을 설정할 수 있습니다 */
+    margin: 20px 0 100px 0;
+    height: 420px;
+}
+.webtoonRecommend .image-container {
+    /*text-align: center; !* 텍스트를 가운데 정렬 *!*/
+    padding: 5px;
+    /*box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);*/
+
+}
+
+.webtoonRecommend .image-container img {
+    display: block;
+    margin: 0 auto; /* 이미지가 가운데 정렬되도록 설정 */
+    width: 100%; /* 이미지의 너비를 컨테이너에 맞추기 */
+    max-width: 350px; /* 필요에 따라 최대 너비 설정 */
+    height: auto;
+    border-radius: 10px;
+}
+
+.webtoonRecommend .image-container label {
+    display: block;
+    margin-top: 10px; /* 이미지와 텍스트 사이의 간격 조정 */
+    font-size: 18px; /* 폰트 크기 조정 */
+
+}
+
+
+/* 마우스를 가져다 댔을 때 효과 */
+.webtoonRecommend .image-container:hover img, .webtoonRecommend .image-container:hover label {
+    cursor: pointer;
+}
+
+.webtoonRecommend .image-container:hover label:hover{
+    text-decoration: underline;
+}
+
+.webtoonList{
+    display: flex;
+}
+
+.webtoonList label{
+    font-weight: lighter;
+    font-size: 15px;
+}
+.webtoonList img{
+    width: 160px;
+    border-radius: 4px;
+    transition: transform 0.3s ease; /* 부드러운 전환 효과 */
+}
+
+.content .image-container:hover img {
+    transform: scale(1.01); /* 이미지를 5% 확대 */
+}
+
+.webtoonList div {
+    text-align: center; /* 버튼을 가로 중앙에 정렬 */
+    margin-left: 1px;
+}
+
+
+
+.webtoonList .image-container {
+    text-align: left;
+    border-bottom: 1px solid #d2d2d2;
+    padding-bottom: 15px;
+
+}
+
+.day-container {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #d2d2d2; /* 테두리 스타일 */
+    margin-bottom: 10px; /* 각 항목 사이의 간격 */
+    border-radius: 1px; /* 테두리 둥글게 */
+}
+
+.day-header {
+    text-align: center;
+    padding: 15px;
+    font-size: 17px;
+}
+
+/* 검색 */
+.contentFind .image-container{
+    display: flex;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.contentFind .imageInfo{
+    display: flex;
+
+}
+.contentFind .imageInfo div{
+    color: gray;
+    font-size: 16px;
+    padding: 10px 20px 0 0px;
+}
+.contentFind .image-container img{
+    width: 100px;
+    border-radius: 5px;
+
+}
+.webtoonContainer{
+    padding: 20px 0 0 20px;
+}
+
+.webtoonContainer .webtoonTitle{
+    font-weight: bold;
+}
