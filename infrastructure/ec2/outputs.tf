@@ -1,4 +1,6 @@
+#############################
 # VPC 관련 출력
+#############################
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = module.vpc.vpc_id
@@ -24,7 +26,9 @@ output "azs" {
   value       = module.vpc.azs
 }
 
+#############################
 # EC2 및 Auto Scaling 관련 출력
+#############################
 output "asg_name" {
   description = "Name of the Auto Scaling Group"
   value       = module.asg.autoscaling_group_name
@@ -50,7 +54,9 @@ output "launch_template_latest_version" {
   value       = module.asg.launch_template_latest_version
 }
 
+#############################
 # Bastion 관련 출력
+#############################
 output "bastion_public_ip" {
   description = "The public IP address of the bastion host"
   value       = var.create_bastion ? module.ec2_instance[0].public_ip : null
@@ -61,7 +67,9 @@ output "bastion_instance_id" {
   value       = var.create_bastion ? module.ec2_instance[0].id : null
 }
 
+#############################
 # 보안 그룹 관련 출력
+#############################
 output "app_security_group_id" {
   description = "The ID of the security group for the application servers"
   value       = module.app_sg.security_group_id
@@ -72,7 +80,9 @@ output "bastion_security_group_id" {
   value       = var.create_bastion ? module.bastion_sg[0].security_group_id : null
 }
 
+#############################
 # IAM 관련 출력
+#############################
 output "app_iam_role_name" {
   description = "The name of the IAM role for the application servers"
   value       = aws_iam_role.app_role.name
@@ -83,7 +93,9 @@ output "app_iam_instance_profile_name" {
   value       = aws_iam_instance_profile.app_profile.name
 }
 
+#############################
 # CloudWatch 관련 출력
+#############################
 output "cloudwatch_log_group_name" {
   description = "The name of the CloudWatch log group"
   value       = aws_cloudwatch_log_group.app.name

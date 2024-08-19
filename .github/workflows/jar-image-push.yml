@@ -6,9 +6,9 @@ on:
   push:
     branches:
       - main  # main 브랜치에 푸시될 때 실행
-  pull_request:
-    branches:
-      - main  # main 브랜치로의 풀 리퀘스트가 생성될 때 실행
+#  pull_request:
+#    branches:
+#      - main  # main 브랜치로의 풀 리퀘스트가 생성될 때 실행
 
 # 실행할 작업 정의
 jobs:

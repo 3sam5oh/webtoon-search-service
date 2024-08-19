@@ -1,4 +1,6 @@
+#############################
 # 기본 설정
+#############################
 variable "region" {
   description = "AWS region"
   type        = string
@@ -19,7 +21,9 @@ variable "tags" {
   type        = map(string)
 }
 
-# VPC 관련
+#############################
+# VPC 관련 설정
+#############################
 variable "vpc_cidr" {
   description = "VPC CIDR"
   type        = string
@@ -60,7 +64,9 @@ variable "enable_dns_support" {
   type        = bool
 }
 
-# EC2 및 Auto Scaling 관련
+#############################
+# EC2 및 Auto Scaling 관련 설정
+#############################
 variable "instance_config" {
   description = "EC2 instance configuration for different environments"
   type = map(object({
@@ -93,7 +99,9 @@ variable "ssh_key_name" {
   type        = string
 }
 
-# Bastion 관련
+#############################
+# Bastion 관련 설정
+#############################
 variable "create_bastion" {
   description = "Whether to create a bastion host"
   type        = bool
@@ -104,21 +112,17 @@ variable "bastion_ingress_cidr" {
   type        = string
 }
 
-# EBS 관련
-variable "use_ebs" {
-  description = "Whether to use EBS volumes"
-  type        = bool
-}
+# variable "ebs_config" {
+#   description = "EBS volume configuration"
+#   type = object({
+#     volume_size = number
+#     volume_type = string
+#   })
+# }
 
-variable "ebs_config" {
-  description = "EBS volume configuration"
-  type = object({
-    volume_size = number
-    volume_type = string
-  })
-}
-
-# CloudWatch 관련
+#############################
+# CloudWatch 관련 설정
+#############################
 variable "cloudwatch_retention_days" {
   description = "Number of days to retain CloudWatch logs"
   type        = number
