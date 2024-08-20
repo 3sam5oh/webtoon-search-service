@@ -74,10 +74,6 @@ body {
     color: gray;
 }
 
-.search-container {
-    display: flex;
-}
-
 
 
 .loginBtn a img, .logoutBtn a img {
@@ -87,14 +83,9 @@ body {
 
 
 /* body */
-.search-container{
+.search-container form input{
     width: 520px;
     margin: 10px auto;
-}
-
-.search-container input {
-    width: 100%;
-    max-width: 500px;
     padding: 15px 25px 15px 25px;
     border: 1px solid #f1f3f4;
     border-radius: 30px;
@@ -103,11 +94,12 @@ body {
     font-size: 16px;
 }
 
+
 .search-container .search-button {
     width: 50px;
     height: 50px;
     background-image: url('https://cdn1.iconfinder.com/data/icons/hawcons/32/698627-icon-111-search-256.png');
-    background-size: 40px;
+    background-size: 50px;
     background-repeat: no-repeat;
     background-position: center;
     background-color: #fff;
@@ -115,6 +107,7 @@ body {
     border-radius: 4px;
     cursor: pointer;
     outline: none;
+    padding: 20px;
 }
 
 .memberInfo{
@@ -239,4 +232,16 @@ body {
 
 .webtoonContainer .webtoonTitle{
     font-weight: bold;
+}
+
+.contentFind .image-container:hover img{
+    transform: scale(1.05); /* 이미지를 5% 확대 */
+}
+
+
+.contentNotFind{
+    background-color: #ddd;
+    padding: 20px;
+    border-radius: 4px;
+
 }
