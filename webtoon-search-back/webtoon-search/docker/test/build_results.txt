@@ -1,0 +1,32 @@
+Build Test Results
+==================
+Original Version:
+Build time: 88 seconds
+Image size: 813MB
+Number of layers: 14
+
+Optimized Version:
+Build time: 77 seconds
+Image size: 399MB
+Number of layers: 18
+
+Cache Efficiency Test:
+Build time:  seconds
+Image size: 
+Number of layers: 
+
+Improvements:
+Image size reduction: 50%
+Layer reduction: -28%
+
+Runtime Performance:
+Original Version:
+Container and application start time: 4611ms
+Memory usage: 320.6MiB
+First request response time: N/As
+
+Optimized Version:
+Container and application start time: 4590ms
+Memory usage: 314.1MiB
+First request response time: N/As
+Start time improvement: 0%
