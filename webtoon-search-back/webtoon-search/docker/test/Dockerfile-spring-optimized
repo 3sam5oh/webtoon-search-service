@@ -22,8 +22,7 @@ FROM amazoncorretto:21-alpine-jdk
 WORKDIR /app
 
 # 환경 변수 설정
-ENV DEBUG_MODE=false \
-    MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,metrics
+ENV DEBUG_MODE=false
 
 # 메타데이터 설정
 LABEL maintainer="samsamohoh" \

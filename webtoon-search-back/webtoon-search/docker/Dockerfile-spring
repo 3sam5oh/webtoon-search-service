@@ -28,10 +28,6 @@ WORKDIR /app
 LABEL maintainer="samsamohoh" \
       application="webtoon-search-back"
 
-# Spring Boot Actuator 엔드포인트 활성화
-# 이를 통해 애플리케이션의 건강 상태, 정보, 메트릭을 모니터링할 수 있음
-ENV MANAGEMENT_ENDPOINTS_WEB_EXPOSURE_INCLUDE=health,info,metrics
-
 # 빌드된 JAR 파일 이름 설정 및 복사
 # ${JAR_FILE}을 사용하여 빌드 시 JAR 파일 이름을 유연하게 지정할 수 있음
 ARG JAR_FILE=webtoon-search-*.jar
@@ -51,11 +47,6 @@ USER appuser:appgroup
 RUN mkdir -p /home/appuser/logs && \
     chown -R appuser:appgroup /home/appuser/logs && \
     chmod -R 775 /home/appuser/logs
-
-# 컨테이너 헬스 체크 설정
-# 30초마다 health 엔드포인트를 확인하여 애플리케이션 상태 모니터링
-HEALTHCHECK --interval=30s --timeout=3s \
-  CMD wget -q --spider http://localhost:8080/actuator/health || exit 1
 
 # 애플리케이션 실행 // ENTRYPOINT - 무조건적인 실행, CMD - 실행 시의 옵션에 따라 변경 가능
 # -Djava.security.egd 옵션은 암호화 작업의 엔트로피 소스를 지정하여 시작 시간 개선
