@@ -1,0 +1,59 @@
+# 빌드 스테이지
+FROM amazoncorretto:21-alpine-jdk AS builder
+WORKDIR /app
+
+# 의존성 캐시를 위한 파일만 먼저 복사 (첫번째 gradle - 소스 경로 (로컬), 두번째 gradle - 목적지 경로(docker image 내의) )
+COPY build.gradle settings.gradle ./
+COPY gradle gradle
+
+# Gradle Wrapper 스크립트 복사 및 권한 설정
+COPY gradlew ./
+RUN chmod +x /app/gradlew
+
+# 의존성 해결 (이 단계는 build.gradle이 변경되었을 때만 재실행됨)
+RUN ./gradlew dependencies --no-daemon
+
+# 소스 코드 복사 및 Gradle 빌드 실행
+COPY src ./src
+RUN /app/gradlew build --no-daemon
+
+# 실행 스테이지
+FROM amazoncorretto:21-alpine-jdk
+WORKDIR /app
+
+# 환경 변수 설정
+ENV DEBUG_MODE=false
+
+# 메타데이터 설정
+LABEL maintainer="samsamohoh" \
+      application="webtoon-search-back"
+
+# 빌드된 JAR 파일만 복사
+COPY --from=builder /app/build/libs/webtoon-search-*.jar app.jar
+
+# 필요한 패키지만 설치 및 불필요한 캐시 삭제
+RUN apk add --no-cache curl && \
+    rm -rf /var/cache/apk/*
+
+# 보안 강화: 비root 사용자 설정
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup && \
+    mkdir -p /home/appuser/logs && \
+    chown -R appuser:appgroup /home/appuser/logs && \
+    chmod -R 775 /home/appuser/logs
+
+USER appuser:appgroup
+
+EXPOSE 8080 5005
+
+# 헬스 체크 설정
+HEALTHCHECK --interval=30s --timeout=3s \
+  CMD curl -f http://localhost:8080/actuator/health || exit 1
+
+# 애플리케이션 실행
+ENTRYPOINT ["sh", "-c", "if [ \"$DEBUG_MODE\" = \"true\" ]; then \
+    echo \"Starting application in debug mode\" && \
+    java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005 -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar; \
+    else \
+    echo \"Starting application in normal mode\" && \
+    java -Djava.security.egd=file:/dev/./urandom -jar /app/app.jar; \
+    fi"]
