@@ -1,8 +1,8 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
-import com.samsamohoh.webtoonsearch.adapter.web.member.NaverUserInfo;
-import com.samsamohoh.webtoonsearch.adapter.web.member.OAuth2UserInfo;
-import com.samsamohoh.webtoonsearch.adapter.web.member.PrincipalDetails;
+import com.samsamohoh.webtoonsearch.adapter.api.member.NaverUserInfo;
+import com.samsamohoh.webtoonsearch.adapter.api.member.OAuth2UserInfo;
+import com.samsamohoh.webtoonsearch.adapter.api.member.PrincipalDetails;
 import com.samsamohoh.webtoonsearch.application.port.in.member.MemberResponseDTO;
 import com.samsamohoh.webtoonsearch.application.port.out.SaveMemberPort;
 import lombok.RequiredArgsConstructor;

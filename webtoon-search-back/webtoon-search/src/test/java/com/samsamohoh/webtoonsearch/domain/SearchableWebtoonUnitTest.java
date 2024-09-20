@@ -3,6 +3,7 @@ package com.samsamohoh.webtoonsearch.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.samsamohoh.webtoonsearch.application.domain.SearchableWebtoon;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
