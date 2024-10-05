@@ -1,20 +1,16 @@
-# 모든 텍스트 파일에 대해 LF를 사용
+# .gitattributes 파일 설정
+# 이 파일은 서로 다른 운영체제(macOS, Windows, Linux) 간의 줄바꿈 문제를 방지하기 위해 사용됩니다.
+# Git은 기본적으로 각 플랫폼에 맞는 줄바꿈(LF 또는 CRLF)을 자동으로 처리하지만,
+# 협업 환경에서 줄바꿈 일관성을 유지하기 위해 특정 파일 형식에 대해 명시적으로 처리 방식을 지정합니다.
+
+# 모든 텍스트 파일에 대해 LF(Line Feed)를 사용하도록 설정합니다.
+# 이는 macOS와 Linux에서 줄바꿈 문제가 발생하지 않도록 합니다.
+
+# .cmd 파일과 그 대소문자 변형에 대해서는 Windows의 CRLF(Carriage Return + Line Feed)를 사용하도록 강제합니다.
+# Windows에서 스크립트 파일이 제대로 작동하기 위해 필요합니다.
+
+# .bat 파일 역시 Windows 환경에서 정상적으로 작동하기 위해 CRLF 줄바꿈을 사용하도록 지정합니다.
+
 * text=auto eol=lf
-
-# 특정 파일 유형에 대해 LF를 사용
-*.sh text eol=lf
-*.yml text eol=lf
-*.yaml text eol=lf
-*.dockerfile text eol=lf
-*.json text eol=lf
-*.conf text eol=lf
-*.properties text eol=lf
-*.ini text eol=lf
-*.md text eol=lf
-*.xml text eol=lf
-*.gradle text eol=lf
-*.java text eol=lf
-*.kt text eol=lf
-
-# gradlew 파일에 대해 LF를 사용
-gradlew text eol=lf
+*.{cmd,[cC][mM][dD]} text eol=crlf
+*.{bat,[bB][aA][tT]} text eol=crlf

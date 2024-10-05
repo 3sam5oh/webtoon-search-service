@@ -8,15 +8,7 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
-# 쉘 스크립트 파일에 대한 설정
-[*.sh]
-end_of_line = lf
-
-# Dockerfile에 대한 설정
-[Dockerfile]
-end_of_line = lf
-
-# YAML 파일에 대한 설정
+# YAML 파일에 대한 설정 (개별 파일 형식별 추가적인 설정만)
 [*.yml]
 indent_style = space
 indent_size = 2
