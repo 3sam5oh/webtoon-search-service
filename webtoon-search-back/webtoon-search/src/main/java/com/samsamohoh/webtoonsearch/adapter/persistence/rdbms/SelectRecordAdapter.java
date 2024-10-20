@@ -1,7 +1,7 @@
 package com.samsamohoh.webtoonsearch.adapter.persistence.rdbms;
 
 import com.samsamohoh.webtoonsearch.adapter.persistence.rdbms.entity.SelectRecordEntity;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectWebtoonDTO;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonDTO;
 import com.samsamohoh.webtoonsearch.application.port.out.AddRecordPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

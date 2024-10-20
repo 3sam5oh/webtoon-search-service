@@ -2,9 +2,9 @@ package com.samsamohoh.webtoonsearch.adapter.api;
 
 import com.samsamohoh.webtoonsearch.adapter.api.webtoon.SearchWebtoonController;
 import com.samsamohoh.webtoonsearch.adapter.api.webtoon.SearchWebtoonResponse;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;

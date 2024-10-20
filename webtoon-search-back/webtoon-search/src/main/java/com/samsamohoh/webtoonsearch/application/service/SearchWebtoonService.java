@@ -1,10 +1,10 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.LoadWebtoonQuery;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.LoadWebtoonQuery;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.instrument.Tag;
 import lombok.RequiredArgsConstructor;

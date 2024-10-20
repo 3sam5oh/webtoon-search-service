@@ -1,7 +1,7 @@
 package com.samsamohoh.webtoonsearch.adapter.api.webtoon;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCommand;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.adapter.api.ApiResponse;
 import io.micrometer.core.annotation.Counted;

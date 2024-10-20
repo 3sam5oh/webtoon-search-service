@@ -1,7 +1,7 @@
 package com.samsamohoh.webtoonsearch.adapter.api.webtoon;
 
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectRecordUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectWebtoonDTO;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonDTO;
 import com.samsamohoh.webtoonsearch.adapter.api.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;

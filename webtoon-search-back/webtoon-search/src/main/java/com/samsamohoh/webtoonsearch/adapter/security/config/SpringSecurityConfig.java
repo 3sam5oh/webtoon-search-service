@@ -1,11 +1,13 @@
-package com.samsamohoh.webtoonsearch.common.security.config;
+package com.samsamohoh.webtoonsearch.adapter.security.config;
 
-import com.samsamohoh.webtoonsearch.application.port.out.SaveMemberPort;
-import com.samsamohoh.webtoonsearch.application.service.PrincipalOauth2UserService;
+import com.samsamohoh.webtoonsearch.adapter.oauth.OAuthMemberServiceAdapter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -13,48 +15,43 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
-import static org.springframework.security.config.Customizer.withDefaults;
-
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+@RequiredArgsConstructor
+public class SpringSecurityConfig {
 
-    private final SaveMemberPort saveMemberPort;
+    private final OAuthMemberServiceAdapter oAuthMemberServiceAdapter;
 
-    // SaveMemberPort를 생성자로 주입받도록 수정합니다.
-    public SecurityConfig(SaveMemberPort saveMemberPort) {
-        this.saveMemberPort = saveMemberPort;
+    @Bean
+    public BCryptPasswordEncoder bCryptPasswordEncoder() {
+
+        return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public PrincipalOauth2UserService principalOauth2UserService() {
-        return new PrincipalOauth2UserService(saveMemberPort);
-    }
-
-    @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // 필요한 경우 CSRF 설정을 조정하세요.
+                .formLogin(formLogin -> formLogin.disable())
+                .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/logins/**").permitAll() // API 엔드포인트에 대한 접근 허용
+                                .requestMatchers("/", "/index.html", "/login/**", "/oauth2/**", "api/**").permitAll() // API 엔드포인트에 대한 접근 허용
                                 .requestMatchers("/webtoons/**").permitAll()
                                 .requestMatchers("/actuator/**").permitAll()
-                                .requestMatchers("/h2-console/**").permitAll()
                                 .anyRequest().authenticated()
                 )
-                .oauth2Login(oauth2Login ->
-                        oauth2Login
-                                .loginPage("/")
-                                .defaultSuccessUrl("http://localhost:8081")
-                                .failureUrl("/")
-                                .userInfoEndpoint(userInfoEndpoint ->
-                                        userInfoEndpoint.userService(principalOauth2UserService())
-                                )
+                .oauth2Login(oauth2Login -> oauth2Login
+                        .loginPage("/")
+                        .defaultSuccessUrl("/api/auth/login-success", true)
+                        .failureUrl("/api/auth/login-failure")
+                        .userInfoEndpoint(userInfo -> userInfo
+                                .userService(oAuthMemberServiceAdapter)
+                        )
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")
-                        .logoutSuccessUrl("http://localhost:8081")
+                        .logoutSuccessUrl("/")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID")
                 )
@@ -62,7 +59,10 @@ public class SecurityConfig {
                         // X-Frame-Options 문제 해결: 동일 출처에서 iframe 허용
                         .frameOptions(frameOptions -> frameOptions.sameOrigin())
                 )
-                .cors(withDefaults()); // 기본 CORS 설정 적용
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()));
 
         return http.build();
     }
@@ -70,9 +70,9 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8081"));
-        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(List.of("*"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173", "http://localhost:8080"));
+        configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+        configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -80,4 +80,3 @@ public class SecurityConfig {
         return source;
     }
 }
-
