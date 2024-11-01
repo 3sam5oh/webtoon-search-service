@@ -5,14 +5,15 @@ import lombok.Value;
 
 @Value
 @Builder
-public class MemberPersistenceResponse {
+public class AuthMemberResponse {
 
     long id;
     String providerId;
     String provider;
     String email;
-    String username;
+    String name;
     String role;
-    String age;
+    String ageRange;
     String gender;
+    String status;
 }

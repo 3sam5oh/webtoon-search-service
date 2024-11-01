@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.adapter.security.config;
+package com.samsamohoh.webtoonsearch.common.security.config;
 
 import com.samsamohoh.webtoonsearch.adapter.oauth.OAuthMemberServiceAdapter;
 import lombok.RequiredArgsConstructor;
@@ -42,11 +42,11 @@ public class SpringSecurityConfig {
                                 .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
-                        .loginPage("/")
-                        .defaultSuccessUrl("/api/auth/login-success", true)
+                        .loginPage("/")  // 로그인 페이지 설정
+                        .defaultSuccessUrl("/api/auth/login-success", true)  // 성공 시 리다이렉트
                         .failureUrl("/api/auth/login-failure")
                         .userInfoEndpoint(userInfo -> userInfo
-                                .userService(oAuthMemberServiceAdapter)
+                                .userService(oAuthMemberServiceAdapter)  // OAuth2 사용자 정보를 처리할 서비스 지정
                         )
                 )
                 .logout(logout -> logout

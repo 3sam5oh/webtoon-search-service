@@ -1,21 +1,17 @@
 package com.samsamohoh.webtoonsearch.application.port.in.member.dto;
 
 import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Value;
 
-@Getter
-@Setter
+@Value
 @Builder
 public class OAuthMemberRegisterRequest {
-
-    private String username;
-    private String name;
-    private String email;
-    private String role;
-    private String provider;
-    private String providerId;
-    private String age;
-    private String gender;
-
+    String providerId;
+    String provider;
+    String email;
+    String name;
+    String role;
+    String ageRange; // Optional ("10-19", "20-29")
+    String gender;   // Optional ("M", "F")
+    String status;
 }

@@ -7,16 +7,23 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "member")
+@Table(name = "member",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_provider_provider_id",
+                        columnNames = {"provider", "provider_id"}
+                )
+        }
+)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class RegisterMemberEntity {
+public class AuthMemberEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @Column(name = "provider_id", nullable = false)
     private String providerId;
@@ -24,16 +31,20 @@ public class RegisterMemberEntity {
     @Column(nullable = false)
     private String provider;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
-    private String username;
+    @Column(nullable = false)
+    private String name;
 
     @Column(nullable = false)
     private String role;
 
-    private String age;
+    @Column(name = "age_range")
+    private String ageRange;
 
     private String gender;
+
+    @Column(nullable = false)
+    private String status;
 }
