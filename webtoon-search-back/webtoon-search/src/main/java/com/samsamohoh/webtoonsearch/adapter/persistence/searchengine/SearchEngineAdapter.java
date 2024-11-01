@@ -1,8 +1,8 @@
 package com.samsamohoh.webtoonsearch.adapter.persistence.searchengine;
 
 import com.samsamohoh.webtoonsearch.adapter.persistence.searchengine.entity.SearchWebtoonEntity;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.LoadWebtoonQuery;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.LoadWebtoonQuery;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.annotation.Timed;

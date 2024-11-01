@@ -1,6 +1,6 @@
 package com.samsamohoh.webtoonsearch.adapter.api.webtoon;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import lombok.Value;
 
 import java.util.List;

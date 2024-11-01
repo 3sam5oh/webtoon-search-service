@@ -2,15 +2,18 @@ package com.samsamohoh.webtoonsearch.adapter.api;
 
 import com.samsamohoh.webtoonsearch.adapter.api.webtoon.SearchWebtoonController;
 import com.samsamohoh.webtoonsearch.adapter.api.webtoon.SearchWebtoonResponse;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
+import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 import java.util.Collections;
 
@@ -43,8 +46,8 @@ class SearchWebtoonControllerUnitTest {
 
         @Test
         @Order(1)
-        @DisplayName("유효한 검색어로 웹툰 검색 시 결과를 반환해야 한다")
-        void withValidQuery_shouldReturnResults() {
+        @DisplayName("유효한 검색어로 웹툰 검색 시 성공 응답을 반환해야 한다")
+        void withValidQuery_shouldReturnSuccessResponse() {
             // Given
             String query = "힘쎈여자";
             WebtoonResult.WebtoonDTO sampleWebtoon = WebtoonResult.WebtoonDTO.builder()
@@ -57,10 +60,14 @@ class SearchWebtoonControllerUnitTest {
             when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonCommand.class))).thenReturn(mockResult);
 
             // When
-            ApiResponse<SearchWebtoonResponse> response = controller.searchWebtoon(query);
+            ResponseEntity<ApiResponse<SearchWebtoonResponse>> responseEntity = controller.searchWebtoon(query);
 
             // Then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            ApiResponse<SearchWebtoonResponse> response = responseEntity.getBody();
             assertThat(response).isNotNull();
+            assertThat(response.isSuccess()).isTrue();
+            assertThat(response.getMessage()).contains("'힘쎈여자'에 대한 검색 결과");
             assertThat(response.getData().getWebtoons()).hasSize(1);
             assertThat(response.getData().getWebtoons().get(0).getId()).isEqualTo("kakao_3727");
 
@@ -70,40 +77,71 @@ class SearchWebtoonControllerUnitTest {
 
         @Test
         @Order(2)
-        @DisplayName("빈 검색어로 웹툰 검색 시 빈 결과를 반환해야 한다")
-        void withEmptyQuery_shouldReturnEmptyResults() {
+        @DisplayName("빈 검색어로 웹툰 검색 시 에러 응답을 반환해야 한다")
+        void withEmptyQuery_shouldReturnErrorResponse() {
             // Given
             String query = "";
+
+            // When
+            ResponseEntity<ApiResponse<SearchWebtoonResponse>> responseEntity = controller.searchWebtoon(query);
+
+            // Then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+            ApiResponse<SearchWebtoonResponse> response = responseEntity.getBody();
+            assertThat(response).isNotNull();
+            assertThat(response.isSuccess()).isFalse();
+            assertThat(response.getMessage()).isEqualTo("검색어를 입력해주세요");
+            assertThat(response.getData()).isNull();
+
+            logger.info("빈 검색어 테스트 통과");
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("검색 결과가 없을 때 적절한 응답을 반환해야 한다")
+        void withNoResults_shouldReturnEmptyResponse() {
+            // Given
+            String query = "존재하지않는웹툰";
             WebtoonResult mockResult = new WebtoonResult(Collections.emptyList());
 
             when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonCommand.class))).thenReturn(mockResult);
 
             // When
-            ApiResponse<SearchWebtoonResponse> response = controller.searchWebtoon(query);
+            ResponseEntity<ApiResponse<SearchWebtoonResponse>> responseEntity = controller.searchWebtoon(query);
 
             // Then
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
+            ApiResponse<SearchWebtoonResponse> response = responseEntity.getBody();
             assertThat(response).isNotNull();
+            assertThat(response.isSuccess()).isTrue();
+            assertThat(response.getMessage()).isEqualTo("검색 결과가 없습니다");
             assertThat(response.getData().getWebtoons()).isEmpty();
 
             verify(searchWebtoonUseCase).searchWebtoons(any(SearchWebtoonCommand.class));
-            logger.info("빈 검색어 테스트 통과");
+            logger.info("결과 없음 테스트 통과");
         }
-    }
-
-    @Nested
-    @DisplayName("healthCheck 메서드")
-    class HealthCheckMethod {
 
         @Test
-        @Order(1)
-        @DisplayName("건강 체크 메서드가 정상적으로 동작해야 한다")
-        void shouldReturnOkMessage() {
+        @Order(4)
+        @DisplayName("검색 중 예외 발생 시 에러 응답을 반환해야 한다")
+        void whenExceptionOccurs_shouldReturnErrorResponse() {
+            // Given
+            String query = "테스트";
+            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonCommand.class)))
+                    .thenThrow(new RuntimeException("검색 중 오류 발생"));
+
             // When
-            String result = controller.healthCheck();
+            ResponseEntity<ApiResponse<SearchWebtoonResponse>> responseEntity = controller.searchWebtoon(query);
 
             // Then
-            assertThat(result).isEqualTo("fine working!");
-            logger.info("건강 체크 테스트 통과");
+            assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+            ApiResponse<SearchWebtoonResponse> response = responseEntity.getBody();
+            assertThat(response).isNotNull();
+            assertThat(response.isSuccess()).isFalse();
+            assertThat(response.getMessage()).isEqualTo("웹툰 검색 중 오류가 발생했습니다");
+            assertThat(response.getData()).isNull();
+
+            logger.info("예외 처리 테스트 통과");
         }
     }
 }
