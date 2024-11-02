@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.application.port.out;
+package com.samsamohoh.webtoonsearch.application.port.out.webtoon;
 
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.LoadWebtoonQuery;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;

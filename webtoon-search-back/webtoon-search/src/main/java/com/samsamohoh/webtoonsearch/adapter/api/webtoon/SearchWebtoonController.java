@@ -1,6 +1,6 @@
 package com.samsamohoh.webtoonsearch.adapter.api.webtoon;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
@@ -34,14 +34,14 @@ public class SearchWebtoonController {
             }
 
             WebtoonResult result = searchWebtoonUseCase.searchWebtoons(
-                    new SearchWebtoonCommand(query)
+                    new SearchWebtoonRequest(query)
             );
 
             SearchWebtoonResponse response = SearchWebtoonResponse.fromWebtoonResult(result);
 
             if (response.getWebtoons().isEmpty()) {
                 return ResponseEntity.ok(
-                        ApiResponse.success("검색 결과가 없습니다", response)
+                        ApiResponse.error("검색 결과가 없습니다")
                 );
             }
 

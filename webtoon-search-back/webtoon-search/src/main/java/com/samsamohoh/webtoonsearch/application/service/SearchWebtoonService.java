@@ -1,9 +1,9 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
-import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
+import com.samsamohoh.webtoonsearch.application.port.out.webtoon.LoadWebtoonPort;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.LoadWebtoonQuery;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.instrument.Tag;
@@ -30,7 +30,7 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
     private final CustomMetrics customMetrics;
 
     @Override
-    public WebtoonResult searchWebtoons(SearchWebtoonCommand command) {
+    public WebtoonResult searchWebtoons(SearchWebtoonRequest command) {
 
         if (isNull(command, "search.condition.null.count"
                 , "title is null"
@@ -44,7 +44,7 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
     }
 
     // 검색어 전달 객체가 null이나 빈 값을 가질 경우 메트릭 에러 카운트 메트릭 등록
-    private boolean isNull(SearchWebtoonCommand data
+    private boolean isNull(SearchWebtoonRequest data
             , String metricName
             , String description
             , List<Tag> tags) {

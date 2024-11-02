@@ -1,8 +1,8 @@
 package com.samsamohoh.webtoonsearch.adapter.persistence.rdbms;
 
 import com.samsamohoh.webtoonsearch.adapter.persistence.rdbms.entity.AuthMemberEntity;
-import com.samsamohoh.webtoonsearch.application.port.out.AuthMemberPort;
-import com.samsamohoh.webtoonsearch.application.port.out.dto.AuthMemberResponse;
+import com.samsamohoh.webtoonsearch.application.port.out.member.AuthMemberPort;
+import com.samsamohoh.webtoonsearch.application.port.out.member.dto.AuthMemberResponse;
 import com.samsamohoh.webtoonsearch.util.SecurityUtils;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

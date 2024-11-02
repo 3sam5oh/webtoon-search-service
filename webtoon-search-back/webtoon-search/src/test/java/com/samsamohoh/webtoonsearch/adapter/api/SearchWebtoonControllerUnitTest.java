@@ -2,7 +2,7 @@ package com.samsamohoh.webtoonsearch.adapter.api;
 
 import com.samsamohoh.webtoonsearch.adapter.api.webtoon.SearchWebtoonController;
 import com.samsamohoh.webtoonsearch.adapter.api.webtoon.SearchWebtoonResponse;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
@@ -57,7 +57,7 @@ class SearchWebtoonControllerUnitTest {
                     .build();
             WebtoonResult mockResult = new WebtoonResult(Collections.singletonList(sampleWebtoon));
 
-            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonCommand.class))).thenReturn(mockResult);
+            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonRequest.class))).thenReturn(mockResult);
 
             // When
             ResponseEntity<ApiResponse<SearchWebtoonResponse>> responseEntity = controller.searchWebtoon(query);
@@ -71,7 +71,7 @@ class SearchWebtoonControllerUnitTest {
             assertThat(response.getData().getWebtoons()).hasSize(1);
             assertThat(response.getData().getWebtoons().get(0).getId()).isEqualTo("kakao_3727");
 
-            verify(searchWebtoonUseCase).searchWebtoons(any(SearchWebtoonCommand.class));
+            verify(searchWebtoonUseCase).searchWebtoons(any(SearchWebtoonRequest.class));
             logger.info("유효한 검색어 테스트 통과");
         }
 
@@ -104,7 +104,7 @@ class SearchWebtoonControllerUnitTest {
             String query = "존재하지않는웹툰";
             WebtoonResult mockResult = new WebtoonResult(Collections.emptyList());
 
-            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonCommand.class))).thenReturn(mockResult);
+            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonRequest.class))).thenReturn(mockResult);
 
             // When
             ResponseEntity<ApiResponse<SearchWebtoonResponse>> responseEntity = controller.searchWebtoon(query);
@@ -117,7 +117,7 @@ class SearchWebtoonControllerUnitTest {
             assertThat(response.getMessage()).isEqualTo("검색 결과가 없습니다");
             assertThat(response.getData().getWebtoons()).isEmpty();
 
-            verify(searchWebtoonUseCase).searchWebtoons(any(SearchWebtoonCommand.class));
+            verify(searchWebtoonUseCase).searchWebtoons(any(SearchWebtoonRequest.class));
             logger.info("결과 없음 테스트 통과");
         }
 
@@ -127,7 +127,7 @@ class SearchWebtoonControllerUnitTest {
         void whenExceptionOccurs_shouldReturnErrorResponse() {
             // Given
             String query = "테스트";
-            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonCommand.class)))
+            when(searchWebtoonUseCase.searchWebtoons(any(SearchWebtoonRequest.class)))
                     .thenThrow(new RuntimeException("검색 중 오류 발생"));
 
             // When

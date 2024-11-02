@@ -1,9 +1,9 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.LoadWebtoonQuery;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
-import com.samsamohoh.webtoonsearch.application.port.out.LoadWebtoonPort;
+import com.samsamohoh.webtoonsearch.application.port.out.webtoon.LoadWebtoonPort;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.Tag;
@@ -70,7 +70,7 @@ class SearchWebtoonServiceUnitTest {
 
             // Given
             String query = "힘쎈여자";
-            SearchWebtoonCommand command = new SearchWebtoonCommand(query);
+            SearchWebtoonRequest command = new SearchWebtoonRequest(query);
             WebtoonResult expectedResult = new WebtoonResult(Arrays.asList(sampleWebtoonDTO));
 
             logger.info("검색어: {}", query);
@@ -103,7 +103,7 @@ class SearchWebtoonServiceUnitTest {
             logger.info("테스트 시작: null 검색어로 웹툰 검색");
 
             // Given
-            SearchWebtoonCommand command = new SearchWebtoonCommand(null);
+            SearchWebtoonRequest command = new SearchWebtoonRequest(null);
             Counter mockCounter = mock(Counter.class);
             when(customMetrics.getCounter(anyString(), anyString(), anyList())).thenReturn(mockCounter);
 
@@ -144,7 +144,7 @@ class SearchWebtoonServiceUnitTest {
             logger.info("테스트 시작: 빈 문자열 검색어로 웹툰 검색");
 
             // Given
-            SearchWebtoonCommand command = new SearchWebtoonCommand("");
+            SearchWebtoonRequest command = new SearchWebtoonRequest("");
             Counter mockCounter = mock(Counter.class);
             when(customMetrics.getCounter(anyString(), anyString(), anyList())).thenReturn(mockCounter);
 
