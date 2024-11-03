@@ -22,6 +22,7 @@ configurations {
 // 모든 구성에 대해 spring-boot-starter-logging 모듈(logback 모듈) 제거
 configurations.all {
     exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+    exclude group: 'commons-logging', module: 'commons-logging'
 }
 
 repositories {
@@ -35,7 +36,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
-    implementation("org.springframework.boot:spring-boot-starter-log4j2")
+    implementation 'org.springframework.boot:spring-boot-starter-log4j2'
 
     // Security & JWT
     implementation 'io.jsonwebtoken:jjwt-api:0.12.6'

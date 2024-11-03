@@ -8,10 +8,10 @@ public final class SecurityUtils {
         throw new AssertionError("Utility class should not be instantiated");
     }
 
-   /**
-    * 이메일 주소를 마스킹 처리
-    * 예: "user@example.com" -> "us***@example.com"
-    */
+    /**
+     * 이메일 주소를 마스킹 처리
+     * 예: "user@example.com" -> "us***@example.com"
+     */
     public static String maskEmail(String email) {
         if (email == null || !email.contains("@")) {
             return "***";
@@ -25,7 +25,6 @@ public final class SecurityUtils {
      * @- 영문: "John Doe" -> "Jo** D**"
      * @- 한글: "홍길동" -> "홍**"
      * @- 한글: "남궁민수" -> "남궁**"
-     *
      * @규칙:
      * @1. 한글 이름: 성은 보존하고 이름은 '*'로 마스킹
      * @2. 영문 이름: 각 단어의 첫 2글자는 보존하고 나머지는 '*'로 마스킹
