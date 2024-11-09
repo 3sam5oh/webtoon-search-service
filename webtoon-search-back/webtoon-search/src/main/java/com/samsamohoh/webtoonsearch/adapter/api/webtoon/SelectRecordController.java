@@ -1,7 +1,7 @@
 package com.samsamohoh.webtoonsearch.adapter.api.webtoon;
 
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectRecordUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonDTO;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonRequest;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class SelectRecordController {
             }
 
             boolean isRecorded = selectRecordUseCase.addClickRecord(
-                    new SelectWebtoonDTO(
+                    new SelectWebtoonRequest(
                             webtoonRequest.getId(),
                             webtoonRequest.getUrl(),
                             webtoonRequest.getTitle(),

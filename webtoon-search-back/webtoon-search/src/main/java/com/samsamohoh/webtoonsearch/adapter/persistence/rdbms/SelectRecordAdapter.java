@@ -1,7 +1,7 @@
 package com.samsamohoh.webtoonsearch.adapter.persistence.rdbms;
 
 import com.samsamohoh.webtoonsearch.adapter.persistence.rdbms.entity.SelectRecordEntity;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonDTO;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.out.AddRecordPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -14,7 +14,7 @@ public class SelectRecordAdapter implements AddRecordPort {
     private final SelectJpaRepository selectJpaRepository;
 
     @Override
-    public boolean addRecord(SelectWebtoonDTO data) {
+    public boolean addRecord(SelectWebtoonRequest data) {
 
         try {
             selectJpaRepository.save(toEntity(data));
@@ -25,7 +25,7 @@ public class SelectRecordAdapter implements AddRecordPort {
         }
     }
 
-    private SelectRecordEntity toEntity(SelectWebtoonDTO dto) {
+    private SelectRecordEntity toEntity(SelectWebtoonRequest dto) {
 
         return new SelectRecordEntity(
                 dto.getId(),

@@ -1,9 +1,11 @@
 package com.samsamohoh.webtoonsearch.adapter.persistence.searchengine;
 
 import com.samsamohoh.webtoonsearch.adapter.persistence.searchengine.entity.SearchWebtoonEntity;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.LoadWebtoonQuery;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
+
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonResponse;
 import com.samsamohoh.webtoonsearch.application.port.out.webtoon.LoadWebtoonPort;
+import com.samsamohoh.webtoonsearch.application.port.out.webtoon.dto.LoadWebtoonRequest;
+import com.samsamohoh.webtoonsearch.application.port.out.webtoon.dto.LoadWebtoonResponse;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Tag;
@@ -15,7 +17,6 @@ import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,19 +31,15 @@ public class SearchEngineAdapter implements LoadWebtoonPort {
     @Timed(value = "search.opensearch.reply.duration",
             extraTags = {"class", "search-engine-adapter", "method", "load-webtoons", "endpoint", "/webtoons/search"},
             description = "duration until opensearch reply")
-    public WebtoonResult loadWebtoons(LoadWebtoonQuery term) {
-
-        String searchTerm = term.getSearchTerm();
-        List<SearchWebtoonEntity> resultList = new ArrayList<>();
+    public List<LoadWebtoonResponse> loadWebtoons(LoadWebtoonRequest term) {
 
         try {
-            SearchRequest request = createSearchRequest(searchTerm);
+            SearchRequest request = createSearchRequest(term.getQuery());
             SearchResponse<SearchWebtoonEntity> response = openSearchClient.search(request, SearchWebtoonEntity.class);
-            List<WebtoonResult.WebtoonDTO> results = response.hits().hits().stream()
-                    .map(hit -> mapToWebtoonDTO(hit.source()))
-                    .toList();
 
-            return new WebtoonResult(results);
+            return  response.hits().hits().stream()
+                    .map(hit -> mapToResponse(hit.source()))
+                    .toList();
 
         } catch (IOException e) {
             customMetrics.getCounter("opensearch.connection.fail.count"
@@ -53,7 +50,6 @@ public class SearchEngineAdapter implements LoadWebtoonPort {
             throw new DataAccessResourceFailureException(e.getMessage());
         }
     }
-
 
     // OpenSearch한테 요청을 보내는 쿼리문
     private SearchRequest createSearchRequest(String searchTerm) {
@@ -90,8 +86,8 @@ public class SearchEngineAdapter implements LoadWebtoonPort {
         );
     }
 
-    private WebtoonResult.WebtoonDTO mapToWebtoonDTO(SearchWebtoonEntity entity) {
-        return WebtoonResult.WebtoonDTO.builder()
+    private LoadWebtoonResponse mapToResponse(SearchWebtoonEntity entity) {
+        return LoadWebtoonResponse.builder()
                 .id(entity.getId())
                 .title(entity.getTitle())
                 .provider(entity.getProvider())
