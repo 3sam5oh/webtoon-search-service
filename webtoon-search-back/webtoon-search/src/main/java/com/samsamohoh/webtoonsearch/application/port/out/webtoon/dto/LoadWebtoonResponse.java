@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto;
+package com.samsamohoh.webtoonsearch.application.port.out.webtoon.dto;
 
 import lombok.Builder;
 import lombok.Value;
@@ -6,17 +6,8 @@ import lombok.Value;
 import java.util.List;
 
 @Value
-@Builder
-public class WebtoonResult {
-    List<WebtoonDTO> webtoons;
+public class LoadWebtoonResponse {
 
-    public WebtoonResult(List<WebtoonDTO> webtoons) {
-        this.webtoons = webtoons;
-    }
-
-    @Value
-    @Builder
-    public static class WebtoonDTO {
         String id;
         String title;
         String provider;
@@ -29,5 +20,4 @@ public class WebtoonResult {
         int ageGrade;
         Integer freeWaitHour;
         List<String> authors;
-    }
 }

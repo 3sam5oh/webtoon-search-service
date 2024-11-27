@@ -16,10 +16,7 @@ public class CustomMetrics {
     }
 
     // 호출되는 메소드에 counter metric 등록이 필요한 경우 호출
-    public Counter getCounter(String metricName
-            , String metricDescribe
-            , List<Tag> tags) {
-
+    public Counter getCounter(String metricName, String metricDescribe, List<Tag> tags) {
         return Counter.builder(metricName)
                 .description(metricDescribe)
                 .tags(tags)

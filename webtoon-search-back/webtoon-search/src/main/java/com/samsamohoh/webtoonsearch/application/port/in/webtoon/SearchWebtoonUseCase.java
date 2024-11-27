@@ -1,8 +1,10 @@
 package com.samsamohoh.webtoonsearch.application.port.in.webtoon;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonCommand;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.WebtoonResult;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonRequest;
+import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonResponse;
+
+import java.util.List;
 
 public interface SearchWebtoonUseCase {
-    WebtoonResult searchWebtoons(SearchWebtoonCommand command);
+    List<SearchWebtoonResponse> searchWebtoons(SearchWebtoonRequest request);
 }

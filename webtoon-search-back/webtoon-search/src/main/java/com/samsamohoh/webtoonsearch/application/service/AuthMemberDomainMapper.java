@@ -2,7 +2,7 @@ package com.samsamohoh.webtoonsearch.application.service;
 
 import com.samsamohoh.webtoonsearch.application.domain.AuthMemberInfo;
 import com.samsamohoh.webtoonsearch.application.port.in.member.dto.MemberProfileResponse;
-import com.samsamohoh.webtoonsearch.application.port.out.dto.AuthMemberResponse;
+import com.samsamohoh.webtoonsearch.application.port.out.member.dto.AuthMemberResponse;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,6 +1,6 @@
-package com.samsamohoh.webtoonsearch.application.port.out;
+package com.samsamohoh.webtoonsearch.application.port.out.member;
 
-import com.samsamohoh.webtoonsearch.application.port.out.dto.AuthMemberResponse;
+import com.samsamohoh.webtoonsearch.application.port.out.member.dto.AuthMemberResponse;
 
 public interface AuthMemberPort {
     AuthMemberResponse saveMember(AuthMemberResponse authMemberResponse);

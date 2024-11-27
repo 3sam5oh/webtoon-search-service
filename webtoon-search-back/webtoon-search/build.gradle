@@ -31,8 +31,8 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-aop'
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
@@ -45,7 +45,7 @@ dependencies {
     // OpenSearch
     // https://mvnrepository.com/artifact/org.opensearch.client/spring-data-opensearch-starter
     implementation("org.opensearch.client:opensearch-rest-client:2.11.0")
-    implementation("org.opensearch.client:opensearch-java:2.7.0")
+    implementation("org.opensearch.client:opensearch-java:2.6.0")
     implementation("jakarta.json:jakarta.json-api")
 
     // Monitoring

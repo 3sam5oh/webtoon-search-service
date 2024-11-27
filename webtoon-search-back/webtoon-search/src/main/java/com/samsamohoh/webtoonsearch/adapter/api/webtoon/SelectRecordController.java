@@ -1,7 +1,5 @@
 package com.samsamohoh.webtoonsearch.adapter.api.webtoon;
 
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SelectRecordUseCase;
-import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SelectWebtoonDTO;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
 import io.micrometer.core.annotation.Counted;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @Slf4j
 public class SelectRecordController {
-    private final SelectRecordUseCase selectRecordUseCase;
 
     @PostMapping("/select")
     public ResponseEntity<ApiResponse<Boolean>> selectWebtoon(@RequestBody SelectRecordRequest webtoonRequest) {
@@ -28,29 +25,12 @@ public class SelectRecordController {
                 return ResponseEntity.badRequest()
                         .body(ApiResponse.error("잘못된 웹툰 정보입니다."));
             }
-
-            boolean isRecorded = selectRecordUseCase.addClickRecord(
-                    new SelectWebtoonDTO(
-                            webtoonRequest.getId(),
-                            webtoonRequest.getUrl(),
-                            webtoonRequest.getTitle(),
-                            webtoonRequest.getPlatform()
+            return ResponseEntity.ok(
+                    ApiResponse.success(
+                            String.format("'%s' 웹툰 선택이 기록되었습니다", webtoonRequest.getTitle()),
+                            true
                     )
             );
-
-            if (isRecorded) {
-                return ResponseEntity.ok(
-                        ApiResponse.success(
-                                String.format("'%s' 웹툰 선택이 기록되었습니다", webtoonRequest.getTitle()),
-                                true
-                        )
-                );
-            } else {
-                return ResponseEntity.ok(
-                        ApiResponse.error("웹툰 선택 기록에 실패했습니다")
-                );
-            }
-
         } catch (Exception e) {
             log.error("웹툰 선택 기록 중 오류 발생: {}", e.getMessage(), e);
             return ResponseEntity.internalServerError()
