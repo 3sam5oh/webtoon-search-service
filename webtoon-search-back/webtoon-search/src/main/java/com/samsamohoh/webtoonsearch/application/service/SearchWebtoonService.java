@@ -1,5 +1,6 @@
 package com.samsamohoh.webtoonsearch.application.service;
 
+import com.samsamohoh.webtoonsearch.application.domain.SearchableWebtoon;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonResponse;
@@ -7,10 +8,14 @@ import com.samsamohoh.webtoonsearch.application.port.out.webtoon.LoadWebtoonPort
 import com.samsamohoh.webtoonsearch.application.port.out.webtoon.dto.LoadWebtoonRequest;
 import com.samsamohoh.webtoonsearch.application.port.out.webtoon.dto.LoadWebtoonResponse;
 import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
+import com.samsamohoh.webtoonsearch.exception.WebtoonSearchException;
 import io.micrometer.core.instrument.Tag;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -28,55 +33,61 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class SearchWebtoonService implements SearchWebtoonUseCase {
+    private static final Logger logger = LoggerFactory.getLogger(SearchWebtoonService.class);
+
     private final LoadWebtoonPort loadWebtoonPort;
     private final CustomMetrics customMetrics;
+    private final SearchWebtoonDomainMapper searchWebtoonDomainMapper;
 
     @Override
     public List<SearchWebtoonResponse> searchWebtoons(SearchWebtoonRequest command) {
 
-    // 검색어 전달 객체가 null이나 빈 값을 가질 경우 메트릭 에러 카운트 메트릭 등록
-        if (isNull(command, "search.condition.null.count"
-            , "title is null"
-            , Arrays.asList(Tag.of("class", "search-webtoon-service"),
+        // 검색어 전달 객체가 null이나 빈 값을 가질 경우 메트릭 에러 카운트 메트릭 등록
+        if (isNull(command, "search.condition.null.count",
+                "title is null",
+                Arrays.asList(Tag.of("class", "search-webtoon-service"),
                         Tag.of("method", "search-webtoons"),
-                                Tag.of("endpoint", "/webtoons/search")))
-                                )
-                                throw new IllegalArgumentException("검색 조건이 존재 하지 않음.");
+                        Tag.of("endpoint", "/webtoons/search")))
+        ) {
+            throw new WebtoonSearchException("검색 조건이 존재 하지 않음.");
+        }
 
-        List<LoadWebtoonResponse> result = loadWebtoonPort.loadWebtoons(new LoadWebtoonRequest(command.getQuery()));
+        long startTime = Instant.now().toEpochMilli();
 
-        return loadToSearch(result);
-}
-    private boolean isNull(SearchWebtoonRequest data
-            , String metricName
-            , String description
-            , List<Tag> tags) {
+        try {
+            // 웹툰 검색 수행
+            List<LoadWebtoonResponse> loadedWebtoons = loadWebtoonPort.loadWebtoons(
+                    new LoadWebtoonRequest(command.getQuery())
+            );
 
+            // 검색 소요 시간 계산
+            long latency = Instant.now().toEpochMilli() - startTime;
+
+            // 도메인 모델로 변환
+            List<SearchableWebtoon> webtoons = loadedWebtoons.stream()
+                    .map(response -> searchWebtoonDomainMapper.toDomainModel(response, latency))
+                    .collect(Collectors.toList());
+
+            // 검색 결과 로깅
+            logger.info("Search completed: query={}, results={}, latency={}ms",
+                    command.getQuery(), webtoons.size(), latency);
+
+            // 응답 변환 및 반환
+            return searchWebtoonDomainMapper.toResponseList(webtoons);
+
+        } catch (Exception e) {
+            logger.error("Failed to search webtoons: query={}, error={}",
+                    command.getQuery(), e.getMessage(), e);
+            throw new WebtoonSearchException("웹툰 검색 중 오류가 발생했습니다", e);
+        }
+    }
+
+    private boolean isNull(SearchWebtoonRequest data, String metricName,
+                           String description, List<Tag> tags) {
         if (data == null || data.getQuery() == null || data.getQuery().isEmpty()) {
             customMetrics.getCounter(metricName, description, tags).increment();
-
             return true;
         }
         return false;
     }
-
-    private List<SearchWebtoonResponse> loadToSearch(List<LoadWebtoonResponse> origin) {
-
-        return origin.stream()
-                .map(searchWebtoon -> new SearchWebtoonResponse(
-                        searchWebtoon.getId(),
-                        searchWebtoon.getTitle(),
-                        searchWebtoon.getProvider(),
-                        searchWebtoon.getUpdateDays(),
-                        searchWebtoon.getUrl(),
-                        searchWebtoon.getThumbnail(),
-                        searchWebtoon.isEnd(),
-                        searchWebtoon.isFree(),
-                        searchWebtoon.isUpdated(),
-                        searchWebtoon.getAgeGrade(),
-                        searchWebtoon.getFreeWaitHour(),
-                        searchWebtoon.getAuthors()
-                )).collect(Collectors.toList());
-    }
-
 }

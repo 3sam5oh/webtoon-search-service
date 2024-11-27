@@ -10,6 +10,7 @@ import com.samsamohoh.webtoonsearch.common.metrics.CustomMetrics;
 import io.micrometer.core.annotation.Timed;
 import io.micrometer.core.instrument.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.opensearch.client.opensearch.OpenSearchClient;
 import org.opensearch.client.opensearch.core.SearchRequest;
 import org.opensearch.client.opensearch.core.SearchResponse;
@@ -20,11 +21,13 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class SearchEngineAdapter implements LoadWebtoonPort {
 
     private final OpenSearchClient openSearchClient;
+    private final SearchEnginePersistenceMapper searchEngineMapper;
     private final CustomMetrics customMetrics;
 
     @Override
@@ -32,19 +35,19 @@ public class SearchEngineAdapter implements LoadWebtoonPort {
             extraTags = {"class", "search-engine-adapter", "method", "load-webtoons", "endpoint", "/webtoons/search"},
             description = "duration until opensearch reply")
     public List<LoadWebtoonResponse> loadWebtoons(LoadWebtoonRequest term) {
-
         try {
             SearchRequest request = createSearchRequest(term.getQuery());
             SearchResponse<SearchWebtoonEntity> response = openSearchClient.search(request, SearchWebtoonEntity.class);
 
-            return  response.hits().hits().stream()
-                    .map(hit -> mapToResponse(hit.source()))
+            return response.hits().hits().stream()
+                    .map(hit -> hit.source())
+                    .map(searchEngineMapper::toResponse)
                     .toList();
 
         } catch (IOException e) {
-            customMetrics.getCounter("opensearch.connection.fail.count"
-                    , "metrics for opensearch connecting failure"
-                    , Arrays.asList(Tag.of("class", "search-engine-adapter"),
+            customMetrics.getCounter("opensearch.connection.fail.count",
+                    "metrics for opensearch connecting failure",
+                    Arrays.asList(Tag.of("class", "search-engine-adapter"),
                             Tag.of("method", "load-webtoons"),
                             Tag.of("endpoint", "/webtoons/search"))).increment();
             throw new DataAccessResourceFailureException(e.getMessage());
@@ -84,22 +87,5 @@ public class SearchEngineAdapter implements LoadWebtoonPort {
                                 )
                         )
         );
-    }
-
-    private LoadWebtoonResponse mapToResponse(SearchWebtoonEntity entity) {
-        return LoadWebtoonResponse.builder()
-                .id(entity.getId())
-                .title(entity.getTitle())
-                .provider(entity.getProvider())
-                .updateDays(entity.getUpdateDays())
-                .url(entity.getUrl())
-                .thumbnail(entity.getThumbnail())
-                .isEnd(entity.isEnd())
-                .isFree(entity.isFree())
-                .isUpdated(entity.isUpdated())
-                .ageGrade(entity.getAgeGrade())
-                .freeWaitHour(entity.getFreeWaitHour())
-                .authors(entity.getAuthors())
-                .build();
     }
 }

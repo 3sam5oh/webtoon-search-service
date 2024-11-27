@@ -4,6 +4,7 @@ import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoo
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.dto.SearchWebtoonResponse;
 import com.samsamohoh.webtoonsearch.application.port.in.webtoon.SearchWebtoonUseCase;
 import com.samsamohoh.webtoonsearch.common.ApiResponse;
+import com.samsamohoh.webtoonsearch.exception.WebtoonSearchException;
 import io.micrometer.core.annotation.Counted;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
@@ -16,12 +17,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/webtoons")
 @Counted(value = "search.request.count", extraTags = {"class", "search-webtoon-controller"})
 @RequiredArgsConstructor
-@Slf4j
 public class SearchWebtoonController {
+
     private final SearchWebtoonUseCase searchWebtoonUseCase;
 
     @Timed(value = "search.request.duration"
@@ -30,26 +32,21 @@ public class SearchWebtoonController {
     @GetMapping("/search")
     public ResponseEntity<ApiResponse<List<SearchWebtoonResponse>>> searchWebtoon(@RequestParam String query) {
         try {
-            if (query == null || query.trim().isEmpty()) {
-                return ResponseEntity.badRequest()
-                        .body(ApiResponse.error("검색어를 입력해주세요"));
-            }
-
             List<SearchWebtoonResponse> result = searchWebtoonUseCase.searchWebtoons(
-                    new SearchWebtoonRequest(query));
-
-            return ResponseEntity.ok(
-                    ApiResponse.success(
-                            String.format("'%s'에 대한 검색 결과 %d건이 있습니다",
-                                    query, result.size()),
-                            result
-                    )
+                    new SearchWebtoonRequest(query)
             );
+            return ResponseEntity.ok(ApiResponse.success(
+                    String.format("'%s'에 대한 검색 결과 %d건이 있습니다", query, result.size()),
+                    result
+            ));
 
-        } catch (Exception e) {
-            log.error("웹툰 검색 중 오류 발생: {}", e.getMessage(), e);
-            return ResponseEntity.internalServerError()
-                    .body(ApiResponse.error("웹툰 검색 중 오류가 발생했습니다"));
+        } catch (IllegalArgumentException | WebtoonSearchException e) {
+            // ApiResponse의 error 메소드는 이미 success=false, data=null로 설정됨
+            ApiResponse<List<SearchWebtoonResponse>> errorResponse = ApiResponse.error(e.getMessage());
+
+            return e instanceof IllegalArgumentException ?
+                    ResponseEntity.badRequest().body(errorResponse) :
+                    ResponseEntity.internalServerError().body(errorResponse);
         }
     }
 }
