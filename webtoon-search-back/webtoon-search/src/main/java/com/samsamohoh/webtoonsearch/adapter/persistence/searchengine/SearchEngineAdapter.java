@@ -34,9 +34,9 @@ public class SearchEngineAdapter implements LoadWebtoonPort {
     @Timed(value = "search.opensearch.reply.duration",
             extraTags = {"class", "search-engine-adapter", "method", "load-webtoons", "endpoint", "/webtoons/search"},
             description = "duration until opensearch reply")
-    public List<LoadWebtoonResponse> loadWebtoons(LoadWebtoonRequest term) {
+    public List<LoadWebtoonResponse> loadWebtoons(LoadWebtoonRequest query) {
         try {
-            SearchRequest request = createSearchRequest(term.getQuery());
+            SearchRequest request = createSearchRequest(query.getQuery());
             SearchResponse<SearchWebtoonEntity> response = openSearchClient.search(request, SearchWebtoonEntity.class);
 
             return response.hits().hits().stream()
