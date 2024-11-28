@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.adapter.persistence.searchengine.config;
+package com.samsamohoh.webtoonsearch.common;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -40,10 +40,10 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
     private final SearchWebtoonDomainMapper searchWebtoonDomainMapper;
 
     @Override
-    public List<SearchWebtoonResponse> searchWebtoons(SearchWebtoonRequest command) {
+    public List<SearchWebtoonResponse> searchWebtoons(SearchWebtoonRequest query) {
 
         // 검색어 전달 객체가 null이나 빈 값을 가질 경우 메트릭 에러 카운트 메트릭 등록
-        if (isNull(command, "search.condition.null.count",
+        if (isNull(query, "search.condition.null.count",
                 "title is null",
                 Arrays.asList(Tag.of("class", "search-webtoon-service"),
                         Tag.of("method", "search-webtoons"),
@@ -57,7 +57,7 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
         try {
             // 웹툰 검색 수행
             List<LoadWebtoonResponse> loadedWebtoons = loadWebtoonPort.loadWebtoons(
-                    new LoadWebtoonRequest(command.getQuery())
+                    new LoadWebtoonRequest(query.getQuery())
             );
 
             // 검색 소요 시간 계산
@@ -70,14 +70,14 @@ public class SearchWebtoonService implements SearchWebtoonUseCase {
 
             // 검색 결과 로깅
             logger.info("Search completed: query={}, results={}, latency={}ms",
-                    command.getQuery(), webtoons.size(), latency);
+                    query.getQuery(), webtoons.size(), latency);
 
             // 응답 변환 및 반환
             return searchWebtoonDomainMapper.toResponseList(webtoons);
 
         } catch (Exception e) {
             logger.error("Failed to search webtoons: query={}, error={}",
-                    command.getQuery(), e.getMessage(), e);
+                    query.getQuery(), e.getMessage(), e);
             throw new WebtoonSearchException("웹툰 검색 중 오류가 발생했습니다", e);
         }
     }

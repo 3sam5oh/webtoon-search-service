@@ -1,4 +1,4 @@
-package com.samsamohoh.webtoonsearch.common.security.config;
+package com.samsamohoh.webtoonsearch.common;
 
 import com.samsamohoh.webtoonsearch.adapter.oauth.OAuthMemberServiceAdapter;
 import lombok.RequiredArgsConstructor;
