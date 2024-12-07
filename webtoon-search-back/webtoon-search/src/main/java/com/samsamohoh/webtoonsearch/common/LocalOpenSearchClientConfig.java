@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Profile;
  * Docker-Compose로 구축된 OpenSearch 연결 담당
  */
 @Configuration
-@Profile("local")
+//@Profile("local")
 public class LocalOpenSearchClientConfig {
 
     @Value("${opensearch.host}")

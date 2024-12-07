@@ -36,10 +36,11 @@ public class SpringSecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/", "/index.html", "/login/**", "/oauth2/**", "api/**").permitAll() // API 엔드포인트에 대한 접근 허용
-                                .requestMatchers("/webtoons/**").permitAll()
-                                .requestMatchers("/actuator/**").permitAll()
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll() // 모든 요청 허용
+//                                .requestMatchers("/", "/index.html", "/login/**", "/oauth2/**", "api/**").permitAll() // API 엔드포인트에 대한 접근 허용
+//                                .requestMatchers("/webtoons/**").permitAll()
+//                                .requestMatchers("/actuator/**").permitAll()
+//                                .anyRequest().authenticated()
                 )
                 .oauth2Login(oauth2Login -> oauth2Login
                         .loginPage("/")  // 로그인 페이지 설정
